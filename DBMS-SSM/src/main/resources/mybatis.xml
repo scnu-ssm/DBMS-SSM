@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 开启驼峰命名规则 -->
+	<settings>
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+	</settings>
+	
+	<!-- 配置别名 实体类的位置 方便引用-->
+	<typeAliases>
+		<package name="com.crud.chenrong.dao"/>
+		<package name="com.crud.zichang.dao"/>
+		<package name="com.crud.taixiong.dao"/>
+	</typeAliases>
+	
+</configuration>
