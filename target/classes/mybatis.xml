@@ -10,9 +10,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 	
 	<!-- 配置别名 实体类的位置 方便引用-->
 	<typeAliases>
-		<package name="com.crud.chenrong.dao"/>
-		<package name="com.crud.zichang.dao"/>
-		<package name="com.crud.taixiong.dao"/>
+		<package name="com.crud.*.dao"/>
 	</typeAliases>
 	
 	<plugins>
