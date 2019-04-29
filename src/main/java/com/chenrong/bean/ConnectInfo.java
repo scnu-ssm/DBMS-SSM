@@ -6,6 +6,7 @@ package com.chenrong.bean;
  *
  */
 public class ConnectInfo {
+	
 
 	private String connectName;
 	

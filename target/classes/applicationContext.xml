@@ -27,7 +27,7 @@
 	<!-- **********		业务注册		********** -->
 	<!-- Service的注册 业务逻辑注册 -->
 	<!-- 配置扫描器 -->
-	<context:component-scan base-package="com.crud.*.service" />
+	<context:component-scan base-package="com.*.service" />
 	
 	<!-- **********		整合Mybatis		********** -->
 	<!-- 1. 注册SqlSessionFactoryBean -->
@@ -43,7 +43,7 @@
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
 		<!-- 扫描所有的DAO接口 加入到IOC容器中 -->
-		<property name="basePackage" value="com.crud.*.dao" />
+		<property name="basePackage" value="com.*.dao" />
 	</bean>
 	
 	<!-- **********		批量执行的SqlSession		********** -->
@@ -69,7 +69,7 @@
 	</tx:advice>
 	<!-- 3. aop配置 -->
 	<aop:config>
-		<aop:pointcut expression="execution(* com.crud.*.service..*(..))" id="myPointCut"/>
+		<aop:pointcut expression="execution(* com.*.service..*(..))" id="myPointCut"/>
 		<aop:advisor advice-ref="transactionAdvice" pointcut-ref="myPointCut"/>
 	</aop:config>
 	
