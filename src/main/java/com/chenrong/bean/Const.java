@@ -30,5 +30,19 @@ public class Const {
 	public static final String UPDATE_SUCCESS = "信息更新成功!";
 	
 	public static final String UPDATE_FAILURE = "信息更新失败!";
+	
+	public static final String CONNECTINFO_NAME_EXISTED = "操作失败，连接名已存在!";
+	
+	public static final String CONNECTINFO_INSERT_SUCCESS = "新建连接成功!";
+	
+	public static final String CONNECTINFO_SELECTED_SUCCESS = "查询连接成功!";
+	
+	public static final String CONNECTINFO_SELECTED_FAILURE = "查询连接失败，连接不存在!";
+	
+	public static final String CONNECTINFO_UPDATE_SUCCESS = "更新连接信息成功!";
+	
+	public static final String CONNECTINFO_DELETE_SUCCESS = "删除连接信息成功!";
+	
+	public static final String CONNECTINFO_DELETE_FAILURE = "删除连接信息失败!";
 
 }

@@ -25,8 +25,6 @@ public class UserController {
 	@ResponseBody
 	public Msg Register(@Param("user") User user) {
 		
-		System.out.println("我进来这里了");
-		
 		int num = userService.checkRegister(user);
 		
 		// 注册失败

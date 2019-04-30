@@ -7,6 +7,7 @@ package com.chenrong.bean;
  */
 public class ConnectInfo {
 	
+    private int connectId;
 
 	private String connectName;
 	
@@ -18,7 +19,23 @@ public class ConnectInfo {
 	
 	private String password;
 	
-	private boolean isSave;
+	private int isSave;
+	
+	public int getIsSave() {
+		return isSave;
+	}
+
+	public void setIsSave(int isSave) {
+		this.isSave = isSave;
+	}
+
+	public int getConnectId() {
+		return connectId;
+	}
+
+	public void setConnectId(int connectId) {
+		this.connectId = connectId;
+	}
 
 	public String getConnectName() {
 		return connectName;
@@ -59,13 +76,11 @@ public class ConnectInfo {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	public boolean isSave() {
-		return isSave;
-	}
-
-	public void setSave(boolean isSave) {
-		this.isSave = isSave;
+	
+	@Override
+	public String toString() {
+		return "ConnectInfo [connectId=" + connectId + ", connectName=" + connectName + ", host=" + host + ", port="
+				+ port + ", username=" + username + ", password=" + password + ", isSave=" + isSave + "]";
 	}
 	
 }

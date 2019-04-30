@@ -53,7 +53,7 @@ public class Msg {
     	
     }
     
-    //注册时账号密码为空
+    //注册时账号密码存在空格
     public static Msg registerFailureSpace() {
     	Msg msg = new Msg();
     	msg.bool = Const.FAILURE;
@@ -103,6 +103,70 @@ public class Msg {
  		return msg;
  	}
  	
+ 	// 新建连接信息成功
+ 	public static Msg connectInfoInsertSuccess() {
+ 		Msg msg = new Msg();
+ 		msg.bool = Const.SUCCESS;
+ 		msg.status = Const.CONNECTINFO_INSERT_SUCCESS;
+ 		return msg;
+ 	}
+ 	
+ 	// 新建连接信息失败，连接名已存在
+ 	public static Msg connectInfoInsertFailure() {
+ 		Msg msg = new Msg();
+ 		msg.bool = Const.FAILURE;
+ 		msg.status = Const.CONNECTINFO_NAME_EXISTED;
+ 		return msg;
+ 	}
+ 	
+ 	// 查询连接信息成功
+ 	public static Msg connectInfoSelectSuccess() {
+ 		Msg msg = new Msg();
+ 		msg.bool = Const.SUCCESS;
+ 		msg.status = Const.CONNECTINFO_SELECTED_SUCCESS;
+ 		return msg;
+ 	}
+ 	
+    // 查询连接信息失败
+ 	public static Msg connectInfoSelectFailure() {
+ 		Msg msg = new Msg();
+ 		msg.bool = Const.FAILURE;
+ 		msg.status = Const.CONNECTINFO_SELECTED_FAILURE;
+ 		return msg;
+ 	}
+ 	
+ 	// 更新连接信息成功
+ 	public static Msg connectInfoUpdateSuccess() {
+ 		Msg msg = new Msg();
+ 		msg.bool = Const.SUCCESS;
+ 		msg.status = Const.CONNECTINFO_UPDATE_SUCCESS;
+ 		return msg;
+ 	}
+ 	
+ 	// 更新连接信息失败，连接名已存在
+ 	public static Msg connectInfoUpdateFailure() {
+ 		Msg msg = new Msg();
+ 		msg.bool = Const.SUCCESS;
+ 		msg.status = Const.CONNECTINFO_NAME_EXISTED;
+ 		return msg;
+ 	}
+ 	
+ 	// 删除连接成功
+ 	public static Msg connectInfoDeleteSuccess() {
+ 		Msg msg = new Msg();
+ 		msg.bool = Const.SUCCESS;
+ 		msg.status = Const.CONNECTINFO_DELETE_SUCCESS;
+ 		return msg;
+ 	}
+ 	
+ 	// 删除连接失败
+ 	public static Msg connectInfoDeleteFailure() {
+ 		Msg msg = new Msg();
+ 		msg.bool = Const.SUCCESS;
+ 		msg.status = Const.CONNECTINFO_DELETE_FAILURE;
+ 		return msg;
+ 	}
+ 	
 	public boolean isBool() {
 		return bool;
 	}
@@ -117,8 +181,6 @@ public class Msg {
 
 	public void setStatus(String status) {
 		this.status = status;
-	}
-    
-    
+	}   
 
 }
