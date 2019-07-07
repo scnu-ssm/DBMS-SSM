@@ -7,9 +7,9 @@ package com.chenrong.bean;
  */
 public class Const {
 	
-	public static final boolean SUCCESS = true;
+	public static final Integer SUCCESS = 200;
 	
-	public static final boolean FAILURE = false;
+	public static final Integer FAILURE = 400;
 	
 	public static final String REGISTER_SUCCESS = "×¢²á³É¹¦!";
 	

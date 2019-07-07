@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.chenrong.bean.ConnectInfo;
-import com.chenrong.bean.Msg;
+import com.chenrong.bean.ScnuResult;
 import com.chenrong.service.ConnectInfoService;
 
 @Controller
@@ -22,7 +22,7 @@ public class ConnectInfoController {
 	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	@ResponseBody
 	// 新建连接信息
-	public Msg createConnect(@Param("connectInfo") ConnectInfo connectInfo) {
+	public ScnuResult createConnect(@Param("connectInfo") ConnectInfo connectInfo) {
 		
 		System.out.println("我进入新建连接方法块了");
 		
@@ -32,17 +32,17 @@ public class ConnectInfoController {
 		
 		// 新建连接信息成功
 		if(taf)
-		return Msg.connectInfoInsertSuccess();
+		return ScnuResult.connectInfoInsertSuccess();
 		
 		// 新建连接失败
-		return Msg.connectInfoInsertFailure();
+		return ScnuResult.connectInfoInsertFailure();
 	}
 	
 	@RequestMapping(value = "/select", method = RequestMethod.POST)
 	@ResponseBody
 	// 查找连接信息
 	// 主要通过 connect_Name 查找记录
-	public Msg selectConnect(@Param("connectInfo") ConnectInfo connectInfo) {
+	public ScnuResult selectConnect(@Param("connectInfo") ConnectInfo connectInfo) {
 	
 		String conenctName = connectInfo.getConnectName();
 		
@@ -55,12 +55,12 @@ public class ConnectInfoController {
 		
 		// 查找连接信息失败
 		if(selectConnectInfo == null)
-		return Msg.connectInfoSelectFailure();
+		return ScnuResult.connectInfoSelectFailure();
 		
 		System.out.println(selectConnectInfo);
 		
 		// 查找连接信息成功
-		return Msg.connectInfoSelectSuccess();
+		return ScnuResult.connectInfoSelectSuccess();
 		
 	}
 	
@@ -68,7 +68,7 @@ public class ConnectInfoController {
 	@ResponseBody
 	// 更新连接信息
 	// 一定要传connect_Id过来，前台需要处理好
-	public Msg updateConnect(@Param("connectInfo") ConnectInfo connectInfo) {
+	public ScnuResult updateConnect(@Param("connectInfo") ConnectInfo connectInfo) {
 		
 		// connect_Id 、 connect_Name的检测
 		if(connectInfo.getConnectId() == 0 || connectInfo.getConnectName() == null)
@@ -80,16 +80,16 @@ public class ConnectInfoController {
 		
 		// 更新连接信息成功
 		if(taf)
-		return Msg.connectInfoUpdateSuccess();
+		return ScnuResult.connectInfoUpdateSuccess();
 		
 		// 更新连接信息失败, 连接名冲突
-	    return Msg.connectInfoUpdateFailure();
+	    return ScnuResult.connectInfoUpdateFailure();
 	}
 	
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	@ResponseBody
 	// 主要通过 connect_Name 删除记录
-	public Msg deleteConnect(@Param("connectInfo") ConnectInfo connectInfo) {
+	public ScnuResult deleteConnect(@Param("connectInfo") ConnectInfo connectInfo) {
 		String connectName = connectInfo.getConnectName();
 		
 		boolean taf = false;
@@ -98,10 +98,10 @@ public class ConnectInfoController {
 		
 		// 删除连接成功
 		if(taf)
-		return Msg.connectInfoDeleteSuccess();
+		return ScnuResult.connectInfoDeleteSuccess();
 		
 		// 删除连接失败
-		return Msg.connectInfoDeleteFailure();
+		return ScnuResult.connectInfoDeleteFailure();
 	}
 
 }

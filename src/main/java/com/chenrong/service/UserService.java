@@ -24,6 +24,7 @@ public class UserService {
 	 * @param user
 	 * @return
 	 */
+	@SuppressWarnings("deprecation")
 	public int checkRegister(User user) {
 		String username = user.getUsername();
 		String password = user.getPassword();

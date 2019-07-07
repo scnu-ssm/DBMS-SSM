@@ -15,13 +15,33 @@
 		<!-- 前缀 -->
 		<property name="prefix" value="/WEB-INF/views/" />
 		<!-- 后缀 -->
-		<property name="suffix" value=".jsp" />
+		<property name="suffix" value=".html" />
 	</bean>
 	<!-- 两个标准配置 -->
 	<!-- 把spirngmvc不能处理的请求交给tomcat 比如静态资源图片等-->
 	<mvc:default-servlet-handler/>
 	
-	<!-- 配置注解驱动 映射动态请求 支持springmvc一些高级功能，快捷AJAX请求等-->
-	<mvc:annotation-driven/>
+	<!-- 配置注解驱动 映射动态请求 支持springmvc一些高级功能，比如JSR303校验，快捷AJAX请求-->
+	<mvc:annotation-driven>
+    <mvc:message-converters>
+        <bean class="org.springframework.http.converter.StringHttpMessageConverter" />
+        <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+            <property name="objectMapper">
+                <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                    <!-- 处理responseBody 里面日期类型 -->
+                    <property name="dateFormat">
+                        <bean class="java.text.SimpleDateFormat">
+                            <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+                        </bean>
+                    </property>
+                    <!-- 为null字段时不显示 -->
+                    <property name="serializationInclusion">
+                        <value type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_EMPTY</value>
+                    </property>
+                </bean>
+            </property>
+        </bean>
+    </mvc:message-converters>
+   </mvc:annotation-driven>
 	
 </beans>
