@@ -1,5 +1,7 @@
 package com.chenrong.dao;
 
+import java.util.List;
+
 import com.chenrong.bean.ConnectInfo;
 
 public interface ConnectInfoMapper {
@@ -7,19 +9,19 @@ public interface ConnectInfoMapper {
 	// 新建数据库连接
 	int insert(ConnectInfo connectInfo);
 	
-	// 查询数据库连接
-	ConnectInfo selectByPrimaryKey(String connectName);
+	// 通过userId查询数据库连接
+	List<ConnectInfo> selectByUserId(String userId);
 	
-	// 修改数据库连接
+	// 通过connectId查询数据库连接
+    ConnectInfo selectByConnectId(String connectId);
+	
+	// 更新数据库连接
 	int updateByPrimaryKeySelective(ConnectInfo connectInfo);
 	
 	// 删除数据库连接
-	int deleteByPrimaryKey(String connectName);
+	int deleteByPrimaryKey(String connectId);
 	
-	// 连接名称检测
-	int checkConnectName(String connectName);
-	
-	// 更新后的名称冲突检测
-	int checkUpdateConnectName(ConnectInfo connectInfo);
+	// 根据userId查询连接
+	List<ConnectInfo> selectConnectByUserId(String userId);
 
 }

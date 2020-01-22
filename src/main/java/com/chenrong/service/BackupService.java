@@ -45,9 +45,9 @@ public class BackupService {
 		return taf;
 	}
 	
-	public boolean Recovery(String connectName, String database, String src) throws Exception {
+	public boolean Recovery(String connectId, String database, String src) throws Exception {
 		
-		ConnectInfo connect = connectInfoService.select(connectName);
+		ConnectInfo connect = connectInfoService.selectByConnectId(connectId);
 		System.out.println("开始恢复...");
 		Connection con = ConnectMySQL.getConnect(connect);
 		Statement statement = con.createStatement();

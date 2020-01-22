@@ -1,35 +1,24 @@
 package com.chenrong.bean;
 
 /**
- *    云用户的信息
+ * 本地用户信息
  * @author chenrong
- *
  */
 public class User {
 	
-	private int id;
+	private String id;
 
 	private String username;
 	
 	private String password;
 	
 	private String email;
-	
-	private String telephone;
-	
-	public String getTelephone() {
-		return telephone;
-	}
 
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}
-
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -60,7 +49,7 @@ public class User {
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", username=" + username + ", password=" + password + ", email=" + email
-				+ ", telephone=" + telephone + "]";
+				+ "]";
 	}	
 	
 }

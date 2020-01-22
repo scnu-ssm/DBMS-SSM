@@ -23,9 +23,9 @@ public class BackupController {
 	// 备份控制器 导出sql
 	@RequestMapping("/backup")
 	@ResponseBody
-	public ScnuResult BackUp(String connectName, String database, String form, String dest) {
+	public ScnuResult BackUp(String conenctId, String database, String form, String dest) {
 		
-		ConnectInfo connect = connectInfoService.select(connectName);
+		ConnectInfo connect = connectInfoService.selectByConnectId(conenctId);
 		String username = connect.getUsername();
 		String password = connect.getPassword();
 		boolean taf = backupService.BackUp(username, password, database, form, dest);
@@ -37,15 +37,15 @@ public class BackupController {
 	// 还原控制器 导入sql
 	@RequestMapping("/recovery")
 	@ResponseBody
-	public ScnuResult Recovery(String connectName, String database, String src) {
+	public ScnuResult Recovery(String conenctId, String database, String src) {
 		
 		boolean taf = false;
-		ConnectInfo connect = connectInfoService.select(connectName);
+		ConnectInfo connect = connectInfoService.selectByConnectId(conenctId);
 		if(connect == null)
 			return ScnuResult.build(taf);
 		
 		try {
-			taf = backupService.Recovery(connectName, database, src);
+			taf = backupService.Recovery(conenctId, database, src);
 		} catch (Exception e) {
 
 			e.printStackTrace();
@@ -57,10 +57,10 @@ public class BackupController {
 	// 关闭连接池的连接
 		@RequestMapping("/closeConnect")
 		@ResponseBody
-		public ScnuResult closeConnect(String connectName) {
+		public ScnuResult closeConnect(String conenctId) {
 			
 			boolean taf = false;
-			ConnectInfo connect = connectInfoService.select(connectName);
+			ConnectInfo connect = connectInfoService.selectByConnectId(conenctId);
 			if(connect == null)
 				return ScnuResult.build(taf);
 			

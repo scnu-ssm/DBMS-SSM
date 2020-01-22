@@ -13,21 +13,25 @@
 	http://www.springframework.org/schema/aop/spring-aop-4.2.xsd 
 	http://www.springframework.org/schema/tx 
 	http://www.springframework.org/schema/tx/spring-tx.xsd">
+	<!-- 自动生成数据表 -->
+	<bean id="tables" class="com.chenrong.util.GenerateTable"></bean>
 	<!-- **********		数据源配置		********** -->
 	<!-- 1. 配置读取jdbc.properties文件 -->
 	<context:property-placeholder location="classpath:jdbc.properties"/>
-	<!-- 2. 配置C3P0连接池 -->
-	<bean name="C3P0DataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" >
-		<property name="jdbcUrl" value="${jdbc.url}" ></property>
-		<property name="driverClass" value="${jdbc.driver}" ></property>
-		<property name="user" value="${jdbc.username}" ></property>
-		<property name="password" value="${jdbc.password}" ></property>
+	<!-- 2. 配置Druid连接池 -->
+	<!-- 配置的信息来自 com.chenrong.util.GenerateTable 类 -->
+	<bean name="DataSource" class="com.alibaba.druid.pool.DruidDataSource" destroy-method="close" >
+		<property name="driverClassName" value="#{tables.DRIVER}" ></property>
+		<property name="url" value="#{tables.JDBCURL}" ></property>
+ 	<!--<property name="username" value="${jdbc.username}" ></property>
+		<property name="password" value="${jdbc.password}" ></property> -->
 	</bean>
 	
 	<!-- **********		业务注册		********** -->
 	<!-- Service的注册 业务逻辑注册 -->
 	<!-- 配置扫描器 -->
 	<context:component-scan base-package="com.*.service" />
+ 	<context:component-scan base-package="com.scnu.util" />
 	
 	<!-- **********		整合Mybatis		********** -->
 	<!-- 1. 注册SqlSessionFactoryBean -->
@@ -35,7 +39,7 @@
 		<!-- 指定mybatis主配置文件的位置 -->
 		<property name="configLocation" value="classpath:mybatis.xml"/>
 		<!-- 连接池注入 -->
-		<property name="dataSource" ref="C3P0DataSource"/>
+		<property name="dataSource" ref="DataSource"/>
 		<!-- 指定mapper文件的位置 -->
 		<property name="mapperLocations" value="classpath:mapper/*.xml"/>
 	</bean>
@@ -57,7 +61,7 @@
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<!-- 控制住数据源 -->
-		<property name="dataSource" ref="C3P0DataSource"/>
+		<property name="dataSource" ref="DataSource"/>
 	</bean>
 	
 	<!-- 2. 注册事务通知 -->

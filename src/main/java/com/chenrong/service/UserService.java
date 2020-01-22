@@ -18,7 +18,6 @@ public class UserService {
 	 * 0 表示 用户名、密码为空
 	 * 1 表示 用户名冲突
 	 * 2 表示 邮箱冲突
-	 * 3 表示 手机号码冲突
 	 * 4 表示 用户名、密码带有空格
 	 * 5 表示检测通过
 	 * @param user
@@ -29,7 +28,6 @@ public class UserService {
 		String username = user.getUsername();
 		String password = user.getPassword();
 		String email = user.getEmail();
-		String telephone = user.getTelephone();
 		
 		// 账号或者密码为空
 		if(StringUtils.isBlank(password) || StringUtils.isBlank(username)) {
@@ -38,14 +36,11 @@ public class UserService {
 		
 		int num1 = userMapper.checkUsername(username);
 		int num2 = userMapper.checkEmail(email);
-		int num3 = userMapper.checkTelephone(telephone);
 		
 		if(num1 >= 1)
 		return 1;
 		if(num2 >= 1)
 		return 2;
-		if(num3 >= 1)
-		return 3;
 		
 		// 判断账号或者密码是否带有空格
 	    if(username.length() != StringUtils.deleteSpaces(username).length() || password.length() != StringUtils.deleteSpaces(password).length())
@@ -105,6 +100,16 @@ public class UserService {
 		return true;
 		
 		return false;
+	}
+	
+	// 查询用户 By Username
+	public User getUserByUserName(String username) {
+		return userMapper.selectByUsername(username);
+    }
+	
+	// 查询用户 By UserId
+	public User getUserByUserId(String userId) {
+		return userMapper.selectByUserId(userId);   
 	}
 
 }

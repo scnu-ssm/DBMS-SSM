@@ -3,33 +3,32 @@
 <mapper namespace="com.chenrong.dao.UserMapper">
 
    <resultMap id="BaseResultMap" type="com.chenrong.bean.User">
-    <id column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="VARCHAR" property="id" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="telephone" jdbcType="VARCHAR" property="telephone" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, username, password, email, telephone
+    id, username, password, email
   </sql> 
   
   <insert id="insert" parameterType="com.chenrong.bean.User">
-    insert into user(username, password, email, telephone )
-    values (#{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
-      #{email,jdbcType=VARCHAR}, #{telephone,jdbcType=VARCHAR})
+    insert into SCNU_User(id, username, password, email)
+    values (#{id,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR})
   </insert>
   
    <select id="selectByPrimaryKey" parameterType="int" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
-    from user
-    where id = #{id,jdbcType=INTEGER}
+    from SCNU_User
+    where id = #{id,jdbcType=VARCHAR}
   </select>
   
   <select id="selectBySelective" parameterType="com.chenrong.bean.User" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
-    from user
+    from SCNU_User
     where
     <if test="username != null">
        username = #{username, jdbcType=VARCHAR} and
@@ -40,13 +39,10 @@
     <if test="email != null">
        email = #{email, jdbcType=VARCHAR} and
     </if>
-    <if test="telephone != null">
-       telephone = #{telephone, jdbcType=VARCHAR}
-    </if>
   </select>
   
   <update id="updateByPrimaryKeySelective" parameterType="com.chenrong.bean.User">
-    update user
+    update SCNU_User
     <set>
       <if test="username != null">
         username = #{username,jdbcType=VARCHAR},
@@ -57,29 +53,31 @@
       <if test="email != null">
         email = #{email,jdbcType=VARCHAR},
       </if>
-      <if test="telephone != null">
-        telephone = #{telephone,jdbcType=VARCHAR},
-      </if>
     </set>
-    where id = #{id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=VARCHAR}
   </update>
   <!-- jdbcType 区别大小写 -->
   <select id="login" resultType="int" parameterType="com.chenrong.bean.User">
-    select count(1) from user
-    where id = #{id,jdbcType=INTEGER} and password = #{password, jdbcType=VARCHAR}
+    select count(1) from SCNU_User
+    where username = #{username,jdbcType=VARCHAR} and password = #{password, jdbcType=VARCHAR}
   </select>
   
   <select id="checkUsername" resultType="int" parameterType="string">
-      select count(1) from user
+      select count(1) from SCNU_User
       where username = #{username, jdbcType=VARCHAR}
   </select>
   <select id="checkEmail" resultType="int" parameterType="string">
-      select count(1) from user
+      select count(1) from SCNU_User
       where email = #{email, jdbcType=VARCHAR}
   </select>
-  <select id="checkTelephone" resultType="int" parameterType="string">
-      select count(1) from user
-      where telephone = #{telephone, jdbcType=VARCHAR}
+  
+  <select id="selectByUsername" parameterType="String" resultMap="BaseResultMap">
+      select <include refid="Base_Column_List" /> from SCNU_User
+      where username = #{username,jdbcType=VARCHAR}
   </select>
 
+  <select id="selectByUserId" parameterType="String" resultMap="BaseResultMap">
+      select <include refid="Base_Column_List" /> from SCNU_User
+      where id = #{userId, jdbcType=VARCHAR}
+  </select>
 </mapper>

@@ -1,8 +1,8 @@
 package com.chenrong.service;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,14 +12,14 @@ import com.mchange.v2.c3p0.ComboPooledDataSource;
 // 获取数据源
 public class ConnectMySQL {
 	
-	static HashMap<Integer, ComboPooledDataSource> poolMap = new HashMap<Integer, ComboPooledDataSource>();
+	static Map<String, ComboPooledDataSource> poolMap = new HashMap<String, ComboPooledDataSource>();
 	
 	@Autowired
 	ConnectInfoService connectInfoService;
 	
 	public static Connection getConnect(ConnectInfo connect) throws Exception {
 		
-		Integer id = connect.getConnectId();
+		String id = connect.getConnectId();
 		if(!poolMap.containsKey(id)) {
 			ComboPooledDataSource dataSource = new ComboPooledDataSource();
 			dataSource.setDriverClass("com.mysql.jdbc.Driver");
@@ -42,7 +42,7 @@ public class ConnectMySQL {
 	}
 	
     public static void closeConnect(ConnectInfo connect) {
-		Integer id = connect.getConnectId();
+		String id = connect.getConnectId();
 		
 		poolMap.remove(id);
 		

@@ -25,8 +25,10 @@ public interface UserMapper {
 	// 邮箱检测
 	int checkEmail(String email);
 	
-	// 电话检测
-	int checkTelephone(String telephone);
+	// 查询用户 By username
+	User selectByUsername(String username);
 	
+	// 查询用户 By userId
+	User selectByUserId(String userId);
 
 }

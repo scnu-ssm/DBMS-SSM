@@ -3,11 +3,12 @@ package com.chenrong.bean;
 /**
  *  数据库连接的信息
  * @author chenrong
- *
  */
 public class ConnectInfo {
 	
-    private int connectId;
+    private String connectId;
+    
+    private String userId; 
 
 	private String connectName;
 	
@@ -29,12 +30,20 @@ public class ConnectInfo {
 		this.isSave = isSave;
 	}
 
-	public int getConnectId() {
+	public String getConnectId() {
 		return connectId;
 	}
 
-	public void setConnectId(int connectId) {
+	public void setConnectId(String connectId) {
 		this.connectId = connectId;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getConnectName() {
@@ -76,11 +85,12 @@ public class ConnectInfo {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "ConnectInfo [connectId=" + connectId + ", connectName=" + connectName + ", host=" + host + ", port="
-				+ port + ", username=" + username + ", password=" + password + ", isSave=" + isSave + "]";
+		return "ConnectInfo [connectId=" + connectId + ", userId=" + userId + ", connectName=" + connectName + ", host="
+				+ host + ", port=" + port + ", username=" + username + ", password=" + password + ", isSave=" + isSave
+				+ "]";
 	}
 	
 }

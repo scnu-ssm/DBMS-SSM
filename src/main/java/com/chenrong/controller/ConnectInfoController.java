@@ -1,5 +1,7 @@
 package com.chenrong.controller;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.chenrong.bean.ConnectInfo;
 import com.chenrong.bean.ScnuResult;
 import com.chenrong.service.ConnectInfoService;
+import com.chenrong.util.GenerateIDUtil;
 
 @Controller
 @RequestMapping("/connectInfo")
@@ -27,13 +30,13 @@ public class ConnectInfoController {
 		System.out.println("我进入新建连接方法块了");
 		
 		boolean taf = false;
-		
+		connectInfo.setConnectId(GenerateIDUtil.getUUID32());
+		System.out.println("我的connectId 为  :  " + connectInfo.getConnectId());
 		taf = connectInfoService.insert(connectInfo);
 		
 		// 新建连接信息成功
 		if(taf)
 		return ScnuResult.connectInfoInsertSuccess();
-		
 		// 新建连接失败
 		return ScnuResult.connectInfoInsertFailure();
 	}
@@ -41,17 +44,15 @@ public class ConnectInfoController {
 	@RequestMapping(value = "/select", method = RequestMethod.POST)
 	@ResponseBody
 	// 查找连接信息
-	// 主要通过 connect_Name 查找记录
-	public ScnuResult selectConnect(@Param("connectInfo") ConnectInfo connectInfo) {
-	
-		String conenctName = connectInfo.getConnectName();
+	// 主要通过 conenctId 查找记录
+	public ScnuResult selectConnect(String connectId) {
 		
 		// 判断空的情况
-		if(StringUtils.isEmpty(conenctName))
+		if(StringUtils.isEmpty(connectId))
 		return null;
 		
 		// 获取连接信息的内容
-		ConnectInfo selectConnectInfo = connectInfoService.select(conenctName);
+		ConnectInfo selectConnectInfo = connectInfoService.selectByConnectId(connectId);
 		
 		// 查找连接信息失败
 		if(selectConnectInfo == null)
@@ -70,31 +71,28 @@ public class ConnectInfoController {
 	// 一定要传connect_Id过来，前台需要处理好
 	public ScnuResult updateConnect(@Param("connectInfo") ConnectInfo connectInfo) {
 		
-		// connect_Id 、 connect_Name的检测
-		if(connectInfo.getConnectId() == 0 || connectInfo.getConnectName() == null)
-		return null;
-		
+		// connect_Id检测
+		if(connectInfo.getConnectName() == null) {
+		   return null;
+		}
 		boolean taf = false;
-		
 		taf = connectInfoService.update(connectInfo);
-		
 		// 更新连接信息成功
 		if(taf)
 		return ScnuResult.connectInfoUpdateSuccess();
 		
-		// 更新连接信息失败, 连接名冲突
+		// 更新连接信息失败
 	    return ScnuResult.connectInfoUpdateFailure();
 	}
 	
 	@RequestMapping(value = "/delete", method = RequestMethod.POST)
 	@ResponseBody
-	// 主要通过 connect_Name 删除记录
-	public ScnuResult deleteConnect(@Param("connectInfo") ConnectInfo connectInfo) {
-		String connectName = connectInfo.getConnectName();
+	// 主要通过 connect_Id 删除记录
+	public ScnuResult deleteConnect(String connectId) {
 		
 		boolean taf = false;
 		
-		taf = connectInfoService.delete(connectName);
+		taf = connectInfoService.delete(connectId);
 		
 		// 删除连接成功
 		if(taf)
@@ -102,6 +100,14 @@ public class ConnectInfoController {
 		
 		// 删除连接失败
 		return ScnuResult.connectInfoDeleteFailure();
+	}
+	
+	// 通过UserId查询连接
+	@RequestMapping(value = "/selectByUserId", method = RequestMethod.POST)
+	@ResponseBody
+	public ScnuResult selectConnectByUserId(String userId) {
+		List<ConnectInfo> list = connectInfoService.selectByUserId(userId);
+		return ScnuResult.build(list);
 	}
 
 }

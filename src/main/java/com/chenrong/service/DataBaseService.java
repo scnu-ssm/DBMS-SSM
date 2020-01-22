@@ -2,7 +2,6 @@ package com.chenrong.service;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
@@ -19,9 +18,9 @@ public class DataBaseService {
 	ConnectInfoService connectInfoService;
 	
 	// 创建数据库
-	public boolean createDateBase(String connectName, String databaseName, String code, String sort) throws Exception {
+	public boolean createDateBase(String connectId, String databaseName, String code, String sort) throws Exception {
 		
-		ConnectInfo connect = connectInfoService.select(connectName);
+		ConnectInfo connect = connectInfoService.selectByConnectId(connectId);
 		Connection con = ConnectMySQL.getConnect(connect);
 		Statement statement = con.createStatement();
 		boolean taf = false;
@@ -37,9 +36,9 @@ public class DataBaseService {
 	}
 	
 	// 删除数据库
-	public boolean deleteDateBase(String connectName, String databaseName) throws Exception {
+	public boolean deleteDateBase(String connectId, String databaseName) throws Exception {
 		
-		ConnectInfo connect = connectInfoService.select(connectName);
+		ConnectInfo connect = connectInfoService.selectByConnectId(connectId);
 		Connection con = ConnectMySQL.getConnect(connect);
 		Statement statement = con.createStatement();
 		
@@ -56,9 +55,9 @@ public class DataBaseService {
 	}
 	
 	// 查询数据库
-	public ArrayList<String> showDateBase(String connectName) throws Exception{
+	public ArrayList<String> showDateBase(String connectId) throws Exception{
 		ArrayList<String> list = new ArrayList<String>();
-		ConnectInfo connect = connectInfoService.select(connectName);
+		ConnectInfo connect = connectInfoService.selectByConnectId(connectId);
 		Connection con = ConnectMySQL.getConnect(connect);
 		Statement statement = con.createStatement();
 		ResultSet result = statement.executeQuery("show databases");
@@ -71,9 +70,9 @@ public class DataBaseService {
 	}
 	
 	// 查询数据库的字符集和排序规则
-	public  DataBaseProperty showProperty(String connectName, String databaseName) throws Exception {
+	public  DataBaseProperty showProperty(String connectId, String databaseName) throws Exception {
 		
-		ConnectInfo connect = connectInfoService.select(connectName);
+		ConnectInfo connect = connectInfoService.selectByConnectId(connectId);
 		Connection con = ConnectMySQL.getConnect(connect);
 		Statement statement = con.createStatement();
 		statement.executeQuery("use " + databaseName);
@@ -92,9 +91,9 @@ public class DataBaseService {
 	}
 	
 	// 更新数据的字符集和排序规则
-    public boolean updateDataBase(String connectName, String databaseName, String character_set_database, String collation_database) throws Exception{
+    public boolean updateDataBase(String connectId, String databaseName, String character_set_database, String collation_database) throws Exception{
     	
-    	ConnectInfo connect = connectInfoService.select(connectName);
+    	ConnectInfo connect = connectInfoService.selectByConnectId(connectId);
 		Connection con = ConnectMySQL.getConnect(connect);
 		Statement statement = con.createStatement();
 		boolean taf = true;
