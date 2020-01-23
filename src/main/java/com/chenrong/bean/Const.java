@@ -45,8 +45,17 @@ public class Const {
 	
 	public static final String CONNECTINFO_DELETE_FAILURE = "删除连接信息失败!";
 	
+	// Derby的表名
 	public static final String USER_TABLE_NAME = "SCNU_User";
 	
 	public static final String CONNECTINFO_TABLE_NAME = "SCNU_ConnectInfo";
+	
+	// Cookie的 key值
+	public static final String userCookieKey = "User";
+	
+	public static final String anonymousCookieKey = "Anonymous";
+	
+	// Session的Key值
+	public static final String USERID = "userId";
 
 }
