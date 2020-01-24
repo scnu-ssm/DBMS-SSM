@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//src/main/java=UTF-8
 encoding//src/main/java/com/chenrong/bean=GBK
 encoding//src/main/java/com/chenrong/controller=GBK
 encoding//src/main/java/com/chenrong/controller/BackupController.java=GBK
@@ -8,6 +9,8 @@ encoding//src/main/java/com/chenrong/service=GBK
 encoding//src/main/java/com/chenrong/service/BackupService.java=UTF-8
 encoding//src/main/java/com/chenrong/util=GBK
 encoding//src/main/java/com/chenrong/util/CorsFilter.java=GBK
+encoding//src/main/java/com/scnu/dao=GBK
+encoding//src/main/java/com/scnu/interceptor=GBK
+encoding//src/main/java/com/scnu/util=GBK
 encoding//src/main/java/com/zichang/bean=GBK
 encoding//src/test/java=UTF-8
-encoding/<project>=GBK

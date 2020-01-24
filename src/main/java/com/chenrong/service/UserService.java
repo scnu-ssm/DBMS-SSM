@@ -93,8 +93,8 @@ public class UserService {
 	 * @param user
 	 * @return
 	 */
-	public boolean Update(User user) {
-		int num = userMapper.updateByPrimaryKeySelective(user);
+	public boolean Update(User user, String restPassword) {
+		int num = userMapper.updateByPrimaryKeySelective(user.getId(), user.getPassword(), restPassword);
 		
 		if(num == 1)
 		return true;

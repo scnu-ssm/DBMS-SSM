@@ -188,6 +188,17 @@ public class ScnuResult {
     	return msg;
     	
     }
+    
+	//Î¥·¨²Ù×÷
+    public static ScnuResult forbidden(Object oj) {
+    	ScnuResult msg = new ScnuResult();
+    	msg.code = Const.FAILURE;
+    	msg.status = "Ê§°Ü";
+    	msg.setData(oj);
+    	
+    	return msg;
+    	
+    }
 
 	public Integer getCode() {
 		return code;

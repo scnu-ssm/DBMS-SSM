@@ -18,7 +18,7 @@ import com.chenrong.bean.Const;
 import com.chenrong.bean.User;
  
 /**
- * 解决跨域请求的过滤器 + 请求Session设置过滤
+ * 解决跨域请求的过滤器 + 设置Session属性
  * @author chenrong
  */
 @Component
@@ -37,22 +37,22 @@ public class CorsFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         
-        String UserSessionID = CookieUtil.getCookieValue(request, Const.userCookieKey);
-        String AnonymousID = CookieUtil.getCookieValue(request, Const.anonymousCookieKey);
+        String userSessionID = CookieUtil.getCookieValue(request, Const.userCookieKey);
+        String anonymousID = CookieUtil.getCookieValue(request, Const.anonymousCookieKey);
         
-        if(AnonymousID == null) {
-        	AnonymousID = GenerateIDUtil.getUUID32();
+        if(anonymousID == null) {
+        	anonymousID = GenerateIDUtil.getUUID32();
         	// 设置过期时间为10年，原则上算永久Cookie
-        	CookieUtil.setCookie(response, Const.anonymousCookieKey, AnonymousID, 10*365*24*60*60);
+        	CookieUtil.setCookie(response, Const.anonymousCookieKey, anonymousID, 10*365*24*60*60);
         }
         
         HttpSession session = request.getSession();
         // UserSessionID 不等于 UserId
-        User user = (User)session.getAttribute(UserSessionID);
+        User user = (User)session.getAttribute(userSessionID);
         
         // 设置userID属性
         if(user == null) {
-        	session.setAttribute(Const.USERID, AnonymousID);
+        	session.setAttribute(Const.USERID, anonymousID);
         }else {
         	session.setAttribute(Const.USERID, user.getId());
         }

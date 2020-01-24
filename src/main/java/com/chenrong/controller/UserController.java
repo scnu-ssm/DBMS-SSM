@@ -1,5 +1,10 @@
 package com.chenrong.controller;
 
+import java.io.UnsupportedEncodingException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,6 +17,7 @@ import com.chenrong.bean.ScnuResult;
 import com.chenrong.bean.User;
 import com.chenrong.service.UserService;
 import com.chenrong.util.GenerateIDUtil;
+import com.scnu.util.MainClient;
 
 @Controller
 @RequestMapping("/user")
@@ -19,6 +25,9 @@ public class UserController {
 	
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	MainClient mainClient;
 	
 	
 	// 用户的注册, 注册的结果 通过json传回给前端
@@ -60,7 +69,7 @@ public class UserController {
 		
 	}
 	
-	// 登录使用账号 username 和 password 登录
+	// 登录使用账号 username 和 password 登录，后续保存Session，待完善
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ResponseBody
 	public ScnuResult Login(@Param("user") User user) {
@@ -76,13 +85,13 @@ public class UserController {
 		
 	}
 	
-	// 修改密码，需要邮箱验证码，后续改善
+	// 修改密码，需要输入原来的密码验证
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseBody
 	public ScnuResult Update(@Param("user") User user, String restPassword) {
 		
 		boolean taf = false;
-		taf = userService.Update(user);
+		taf = userService.Update(user, restPassword);
 		// 更新成功
 		if(taf)
 		return ScnuResult.updateSuccess();
@@ -90,6 +99,60 @@ public class UserController {
 		// 更新失败
 		return ScnuResult.updateFailure();
 	}
+	
+	// 忘记密码，需要邮箱验证码来验证, 从而修改密码
+	@RequestMapping("/UpdatePasswordByCode")
+	@ResponseBody
+	public ScnuResult UpdatePasswordByCode(String code, String restPassword, HttpServletRequest request) {
+		   HttpSession session = request.getSession();
+		   String validateCode = (String)session.getAttribute(Const.VALIDATA_CODE);
+		   String validateUsername = (String)session.getAttribute(Const.VALIDATE_USERNAME);
+		   if(validateCode == null || validateUsername == null) {
+			      return ScnuResult.forbidden("还没有申请发送忘记密码邮件!");
+		   }
+		   if(validateCode.equals(code)) {
+			   User user = userService.getUserByUserName(validateUsername);
+			   boolean taf = userService.Update(user, restPassword);
+			   if(taf) {
+				    // 删除原来的验证码信息
+				    session.removeAttribute(Const.VALIDATA_CODE);
+				    session.removeAttribute(Const.VALIDATE_USERNAME);
+			        return ScnuResult.build("修改密码成功");
+			   }
+		   }else {
+			   return ScnuResult.forbidden("输入的6位验证码错误");
+		   }
+		   return ScnuResult.forbidden("修改密码失败");
+	}
+	
+	// 产生验证码，通过邮件发送
+	@RequestMapping("/generateCode")
+	@ResponseBody
+	public ScnuResult generateCode(String username, HttpServletRequest request) {
+		   User user = userService.getUserByUserName(username);
+		   if(user == null) {
+			    return ScnuResult.forbidden("用户不存在");
+		   }
+		   
+		   String email = user.getEmail();
+		   String code = GenerateIDUtil.getCode();
+		   
+		   // 将validateUsername、validateCode信息存放在Session
+		   HttpSession session = request.getSession();
+           session.setAttribute(Const.VALIDATE_USERNAME, username);
+           session.setAttribute(Const.VALIDATA_CODE, code);
+		   
+		   // 调用发邮件接口
+		   String content = new String("Hello, " + username + " ! <br>"
+				    + "Enter this 6 digit code to confirm your identity: <br><br>"
+				    + code);
+		   mainClient.sendMain(email, Const.SUBJECT, content);
+		   
+		   return ScnuResult.build(email);
+	}
+	
+	// 退出登录
+	
 	
 	// 查询本地用户，通过username查询
 	@RequestMapping(value = "/selectUserByUsername", method = RequestMethod.POST)

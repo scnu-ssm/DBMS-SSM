@@ -57,5 +57,12 @@ public class Const {
 	
 	// Session的Key值
 	public static final String USERID = "userId";
+	
+	public static final String VALIDATE_USERNAME = "validateUsername";
+	
+	public static final String VALIDATA_CODE = "validateCode";
+	
+	// 邮件服务常量
+	public static final String SUBJECT = "密码找回 - 验证码";
 
 }

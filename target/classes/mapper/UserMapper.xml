@@ -43,18 +43,8 @@
   
   <update id="updateByPrimaryKeySelective" parameterType="com.chenrong.bean.User">
     update SCNU_User
-    <set>
-      <if test="username != null">
-        username = #{username,jdbcType=VARCHAR},
-      </if>
-      <if test="password != null">
-        password = #{password,jdbcType=VARCHAR},
-      </if>
-      <if test="email != null">
-        email = #{email,jdbcType=VARCHAR},
-      </if>
-    </set>
-    where id = #{id,jdbcType=VARCHAR}
+    password = #{restPassword,jdbcType=VARCHAR},
+    where id = #{id,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR}
   </update>
   <!-- jdbcType 区别大小写 -->
   <select id="login" resultType="int" parameterType="com.chenrong.bean.User">

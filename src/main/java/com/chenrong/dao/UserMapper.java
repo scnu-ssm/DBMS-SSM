@@ -16,8 +16,8 @@ public interface UserMapper {
 	// 登录
 	int login(User user);
 	
-	// 个人信息更新
-	int updateByPrimaryKeySelective(User user);
+	// 更新密码
+	int updateByPrimaryKeySelective(String id, String password, String restPassword);
 	
 	// 用户名检测
 	int checkUsername(String username);

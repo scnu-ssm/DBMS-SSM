@@ -43,5 +43,13 @@
         </bean>
     </mvc:message-converters>
    </mvc:annotation-driven>
+   
+   <!-- 配置拦截器 -->
+   <mvc:interceptors>
+       <mvc:interceptor>
+            <mvc:mapping path="/user/update"/>
+            <bean class="com.scnu.interceptor.LoginInterceptor"></bean>
+       </mvc:interceptor>
+   </mvc:interceptors>
 	
 </beans>

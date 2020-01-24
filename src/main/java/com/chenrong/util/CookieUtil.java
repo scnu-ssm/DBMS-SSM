@@ -18,11 +18,13 @@ public class CookieUtil {
 	public static String getCookieValue(HttpServletRequest request, String Key) {
 		   Cookie[] cookies = request.getCookies();
 		   String value = null;
-		   for(Cookie cookie : cookies) {
-			     if(cookie.getName().equalsIgnoreCase(Key.toLowerCase())) {
-			    	value = cookie.getValue();
-			    	break;
-			     }
+		   if(cookies != null) {
+		        for(Cookie cookie : cookies) {
+			        if(cookie.getName().equalsIgnoreCase(Key.toLowerCase())) {
+			    	    value = cookie.getValue();
+			    	    break;
+			        }
+		        }
 		   }
 		   return value;
 	}
