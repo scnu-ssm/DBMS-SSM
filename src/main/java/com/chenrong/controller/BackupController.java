@@ -15,22 +15,21 @@ import com.chenrong.service.ConnectInfoService;
 public class BackupController {
 	
 	@Autowired
-	ConnectInfoService connectInfoService;
-	
-	@Autowired
 	BackupService backupService;
 	
 	// 备份控制器 导出sql
 	@RequestMapping("/backup")
 	@ResponseBody
-	public ScnuResult BackUp(String conenctId, String database, String form, String dest) {
+	public ScnuResult BackUp(String conenctId, String database, String dest) {
 		
-		ConnectInfo connect = connectInfoService.selectByConnectId(conenctId);
-		String username = connect.getUsername();
-		String password = connect.getPassword();
-		boolean taf = backupService.BackUp(username, password, database, form, dest);
+		boolean taf = backupService.BackUp(conenctId, database, dest);
 		
-		return ScnuResult.build(taf);
+		if(taf) {
+			return ScnuResult.build("转存SQL文件成功");
+		}else {
+			return ScnuResult.forbidden("转存SQL文件失败");
+		}
+		
 	}
 	
 	
@@ -39,34 +38,20 @@ public class BackupController {
 	@ResponseBody
 	public ScnuResult Recovery(String conenctId, String database, String src) {
 		
-		boolean taf = false;
-		ConnectInfo connect = connectInfoService.selectByConnectId(conenctId);
-		if(connect == null)
-			return ScnuResult.build(taf);
-		
+		Integer status = 0;
 		try {
-			taf = backupService.Recovery(conenctId, database, src);
+			status = backupService.Recovery(conenctId, database, src);
 		} catch (Exception e) {
-
 			e.printStackTrace();
 		}
-		
-		return ScnuResult.build(taf);
-	}
-	
-	// 关闭连接池的连接
-		@RequestMapping("/closeConnect")
-		@ResponseBody
-		public ScnuResult closeConnect(String conenctId) {
-			
-			boolean taf = false;
-			ConnectInfo connect = connectInfoService.selectByConnectId(conenctId);
-			if(connect == null)
-				return ScnuResult.build(taf);
-			
-			taf = backupService.closeConnect(connect);
-			
-			return ScnuResult.build(taf);
+		if(status.equals(-1)) {
+			return ScnuResult.forbidden("不存在连接");
+		}else if(status.equals(0)) {
+			return ScnuResult.forbidden("出现异常");
+		}else {
+			return ScnuResult.build("还原成功");
 		}
+		
+	}
  
 }

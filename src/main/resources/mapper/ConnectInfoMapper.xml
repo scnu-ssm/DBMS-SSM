@@ -27,7 +27,7 @@
       select
       <include refid="Base_Column_List" />
       from SCNU_ConnectInfo
-      where user_Id = #{userId, jdbcType=VARCHAR}
+      where user_Id = #{userId, jdbcType=VARCHAR} order by connect_Name 
   </select>
   
   <select id="selectByConnectId" parameterType="string" resultMap="BaseResultMap">
@@ -38,7 +38,7 @@
   </select>
   
   <update id="updateByPrimaryKeySelective" parameterType="com.chenrong.bean.ConnectInfo">
-      update SCNU_ConnectInfo
+      update SCNU_ConnectInfo set
             connect_Name = #{connectName, jdbcType=VARCHAR},
             host = #{host, jdbcType=VARCHAR},
             port = #{port, jdbcType=INTEGER},
@@ -52,12 +52,5 @@
       delete from SCNU_ConnectInfo
       where connect_Id = #{connectId, jdbcType=VARCHAR}
   </delete>
-  
-  <select id="selectConnectByUserId" parameterType="string" resultMap="BaseResultMap">
-      select
-      <include refid="Base_Column_List" />
-      from SCNU_ConnectInfo
-      where user_Id = #{userId, jdbcType=VARCHAR}
-  </select>
   
 </mapper>

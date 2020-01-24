@@ -3,6 +3,9 @@ package com.chenrong.util;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import com.chenrong.bean.Const;
 
 // 设置Cookie, 获取Cookie, 设置Cookie的过期时间
 public class CookieUtil {
@@ -42,6 +45,12 @@ public class CookieUtil {
 		   cookie.setDomain(DEMAIN);
 		   cookie.setPath(PATH);
 		   response.addCookie(cookie);
+	}
+	
+	// 得到session的USERID的值
+	public static String getUserID(HttpServletRequest request) {
+		   HttpSession session = request.getSession();
+		   return (String)session.getAttribute(Const.USERID);
 	}
 	
 }

@@ -4,51 +4,70 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 
+import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.chenrong.bean.ConnectInfo;
 import com.chenrong.bean.DataBaseProperty;
+import com.scnu.util.ConnectManager;
 
 @Service
 public class DataBaseService {
 	
 	@Autowired
-	ConnectInfoService connectInfoService;
+	ConnectManager connectManager;
 	
-	// 创建数据库
+	/**
+	 *  创建数据库
+	 * @param connectId 连接的ID
+	 * @param databaseName 数据库名字
+	 * @param code 数据库编码
+	 * @param sort 数据库索引格式
+	 * @return
+	 * @throws Exception
+	 */
 	public boolean createDateBase(String connectId, String databaseName, String code, String sort) throws Exception {
 		
-		ConnectInfo connect = connectInfoService.selectByConnectId(connectId);
-		Connection con = ConnectMySQL.getConnect(connect);
-		Statement statement = con.createStatement();
+		SqlSession sqlsession = connectManager.getSessionAutoCommitByConnectId(connectId);
+		Connection connect = sqlsession.getConnection();
+		Statement statement = connect.createStatement();
+		
 		boolean taf = false;
 		try {
-		statement.execute("create database " + databaseName + " default charset " + code + " collate " + sort);
-		taf = true;
+		   statement.execute("create database " + databaseName + " default charset " + code + " collate " + sort);
+		   taf = true;
 		}catch(Exception e) {
-		e.printStackTrace();
-		System.out.println("message = " + e.getMessage());
-		con.close();
+		   e.printStackTrace();
+		}finally {
+		   statement.close();
+		   connect.close();
+		   sqlsession.close();
 		}
+		
 		return taf;
+		
 	}
 	
 	// 删除数据库
 	public boolean deleteDateBase(String connectId, String databaseName) throws Exception {
 		
-		ConnectInfo connect = connectInfoService.selectByConnectId(connectId);
-		Connection con = ConnectMySQL.getConnect(connect);
-		Statement statement = con.createStatement();
+		SqlSession sqlsession = connectManager.getSessionAutoCommitByConnectId(connectId);
+		Connection connect = sqlsession.getConnection();
+		Statement statement = connect.createStatement();
 		
 		boolean taf = false;
 		try {
-		statement.execute("drop database " + databaseName);
-		taf = true;
+		   statement.execute("drop database " + databaseName);
+		   taf = true;
 		}catch(Exception e) {
-		e.printStackTrace();
-		con.close();
+		   e.printStackTrace();
+		}finally {
+		   statement.close();
+		   connect.close();
+		   sqlsession.close();
 		}
 		
 		return taf;
@@ -57,14 +76,21 @@ public class DataBaseService {
 	// 查询数据库
 	public ArrayList<String> showDateBase(String connectId) throws Exception{
 		ArrayList<String> list = new ArrayList<String>();
-		ConnectInfo connect = connectInfoService.selectByConnectId(connectId);
-		Connection con = ConnectMySQL.getConnect(connect);
-		Statement statement = con.createStatement();
-		ResultSet result = statement.executeQuery("show databases");
-		while(result.next())
-			list.add(result.getString("Database"));
-		con.close();
-		
+		SqlSession sqlsession = connectManager.getSessionAutoCommitByConnectId(connectId);
+		Connection connect = sqlsession.getConnection();
+		Statement statement = connect.createStatement();
+		try {
+		   ResultSet result = statement.executeQuery("show databases");
+		   while(result.next()) {
+			   list.add(result.getString(1));
+		   }
+		} finally {
+		   statement.close();
+		   connect.close();
+		   sqlsession.close();
+		}
+		// 按照数据库名字排序
+		Collections.sort(list);
 		return list;
 		
 	}
@@ -72,50 +98,56 @@ public class DataBaseService {
 	// 查询数据库的字符集和排序规则
 	public  DataBaseProperty showProperty(String connectId, String databaseName) throws Exception {
 		
-		ConnectInfo connect = connectInfoService.selectByConnectId(connectId);
-		Connection con = ConnectMySQL.getConnect(connect);
-		Statement statement = con.createStatement();
+		SqlSession sqlsession = connectManager.getSessionAutoCommitByConnectId(connectId);
+		Connection connect = sqlsession.getConnection();
+		Statement statement = connect.createStatement();
+		
 		statement.executeQuery("use " + databaseName);
 		DataBaseProperty  dataBaseProperty = new DataBaseProperty();
-		ResultSet resultSet = statement.executeQuery("show variables like 'character_set_database' ");
+		dataBaseProperty.setDatabaseName(databaseName);
+		ResultSet resultSet = statement.executeQuery("show variables like 'character_set_database'");
 		while(resultSet.next()) {
-			dataBaseProperty.setCharacter_set_database(resultSet.getString("Value"));
+			dataBaseProperty.setCharacterSetDatabase(resultSet.getString("Value"));
 		}
 		resultSet = statement.executeQuery("show variables like 'collation_database' ");
 		while(resultSet.next()) {
-			dataBaseProperty.setCollation_database(resultSet.getString("Value"));
+			dataBaseProperty.setCollationDatabase(resultSet.getString("Value"));
 		}
+		statement.close();
+		connect.close();
+		sqlsession.close();
 		
-		con.close();
 		return dataBaseProperty;
 	}
 	
 	// 更新数据的字符集和排序规则
-    public boolean updateDataBase(String connectId, String databaseName, String character_set_database, String collation_database) throws Exception{
+    public boolean updateDataBase(String connectId, String databaseName, String characterSetDatabase, String collationDatabase) throws Exception{
     	
-    	ConnectInfo connect = connectInfoService.selectByConnectId(connectId);
-		Connection con = ConnectMySQL.getConnect(connect);
-		Statement statement = con.createStatement();
+		SqlSession sqlsession = connectManager.getSessionAutoCommitByConnectId(connectId);
+		Connection connect = sqlsession.getConnection();
+		Statement statement = connect.createStatement();
 		boolean taf = true;
 		
 		try {
-		if(character_set_database != null) {
-			String SQL = "alter database " + databaseName + " default character set " + character_set_database;
+		if(characterSetDatabase != null) {
+			String SQL = "alter database " + databaseName + " default character set " + characterSetDatabase;
 			System.out.println(" SQL = " + SQL);
-		statement.execute(SQL);
+		    statement.execute(SQL);
 		}
 		
-		if(collation_database != null) {
-			String SQL = "alter database " + databaseName + " default collate " + collation_database;
+		if(collationDatabase != null) {
+			String SQL = "alter database " + databaseName + " default collate " + collationDatabase;
 			System.out.println("SQL = " + SQL);
-		statement.execute(SQL);
+		    statement.execute(SQL);
 		}
 		}catch(Exception e){
 			taf = false;
 			e.printStackTrace();
 		}
-    	
-		con.close();
+		statement.close();
+		connect.close();
+		sqlsession.close();
     	return taf;
+    	
     }
 }

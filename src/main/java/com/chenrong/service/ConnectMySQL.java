@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import com.chenrong.bean.ConnectInfo;
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 
-// 获取数据源
+
+// 获取数据源,目前已经废弃，通过ConnectManager获取连接
+@Deprecated
 public class ConnectMySQL {
 	
 	static Map<String, ComboPooledDataSource> poolMap = new HashMap<String, ComboPooledDataSource>();
