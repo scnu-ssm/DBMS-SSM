@@ -7,7 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 // 设置Cookie, 获取Cookie, 设置Cookie的过期时间
 public class CookieUtil {
 	
-	public final static Integer expireTime = 3600;
+	// 默认30分钟有效时间
+	public final static Integer expireTime = 1800;
 	
 	public final static String DEMAIN = "localhost";  // Cookie的域
 	

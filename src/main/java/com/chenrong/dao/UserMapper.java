@@ -1,5 +1,7 @@
 package com.chenrong.dao;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.chenrong.bean.User;
 
 public interface UserMapper {
@@ -17,7 +19,7 @@ public interface UserMapper {
 	int login(User user);
 	
 	// 更新密码
-	int updateByPrimaryKeySelective(String id, String password, String restPassword);
+	int updateByPrimaryKeySelective(@Param("id") String id, @Param("password") String password, @Param("restPassword") String restPassword);
 	
 	// 用户名检测
 	int checkUsername(String username);

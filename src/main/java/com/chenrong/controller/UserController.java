@@ -1,8 +1,7 @@
 package com.chenrong.controller;
 
-import java.io.UnsupportedEncodingException;
-
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.annotations.Param;
@@ -16,6 +15,7 @@ import com.chenrong.bean.Const;
 import com.chenrong.bean.ScnuResult;
 import com.chenrong.bean.User;
 import com.chenrong.service.UserService;
+import com.chenrong.util.CookieUtil;
 import com.chenrong.util.GenerateIDUtil;
 import com.scnu.util.MainClient;
 
@@ -69,16 +69,24 @@ public class UserController {
 		
 	}
 	
-	// 登录使用账号 username 和 password 登录，后续保存Session，待完善
+	// 登录使用账号 username 和 password 登录，设置Session、Cookie
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ResponseBody
-	public ScnuResult Login(@Param("user") User user) {
+	public ScnuResult Login(@Param("user") User user, HttpServletRequest request, HttpServletResponse response) {
 		
 		boolean taf = false;
 		taf = userService.Login(user);
 		// 登录成功
-		if(taf)
-		return ScnuResult.loginSuccess();
+		if(taf) {
+		   // 设置Session属性
+		   HttpSession session = request.getSession();
+		   User realUser = userService.getUserByUserName(user.getUsername());
+		   String userSessionID = GenerateIDUtil.getUUID32();
+		   session.setAttribute(userSessionID, realUser);
+		   // 设置Cookie，有效期是30分钟
+		   CookieUtil.setCookie(response, Const.userCookieKey, userSessionID);
+		   return ScnuResult.loginSuccess();
+		}
 		
 		// 登录失败
 		return ScnuResult.loginFailure();
@@ -117,6 +125,7 @@ public class UserController {
 				    // 删除原来的验证码信息
 				    session.removeAttribute(Const.VALIDATA_CODE);
 				    session.removeAttribute(Const.VALIDATE_USERNAME);
+				    session.setMaxInactiveInterval(0);
 			        return ScnuResult.build("修改密码成功");
 			   }
 		   }else {
@@ -141,6 +150,8 @@ public class UserController {
 		   HttpSession session = request.getSession();
            session.setAttribute(Const.VALIDATE_USERNAME, username);
            session.setAttribute(Const.VALIDATA_CODE, code);
+           
+           System.out.println("验证码为: " + code);
 		   
 		   // 调用发邮件接口
 		   String content = new String("Hello, " + username + " ! <br>"
@@ -152,7 +163,13 @@ public class UserController {
 	}
 	
 	// 退出登录
-	
+	@RequestMapping("/logout")
+	@ResponseBody
+	public ScnuResult logout(HttpServletRequest request) {
+		HttpSession session = request.getSession();
+		session.invalidate();
+		return ScnuResult.build("退出成功");
+	}
 	
 	// 查询本地用户，通过username查询
 	@RequestMapping(value = "/selectUserByUsername", method = RequestMethod.POST)

@@ -43,7 +43,7 @@
   
   <update id="updateByPrimaryKeySelective" parameterType="com.chenrong.bean.User">
     update SCNU_User
-    password = #{restPassword,jdbcType=VARCHAR},
+    set password = #{restPassword,jdbcType=VARCHAR}
     where id = #{id,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR}
   </update>
   <!-- jdbcType 区别大小写 -->

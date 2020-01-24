@@ -53,10 +53,11 @@ public class CorsFilter implements Filter {
         // 设置userID属性
         if(user == null) {
         	session.setAttribute(Const.USERID, anonymousID);
+        	System.out.println("anonymousID = " + anonymousID);
         }else {
         	session.setAttribute(Const.USERID, user.getId());
+        	System.out.println("UserId = " + user.getId());
         }
-        
         
         // 解决跨域请求
  

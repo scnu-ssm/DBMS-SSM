@@ -48,6 +48,8 @@
    <mvc:interceptors>
        <mvc:interceptor>
             <mvc:mapping path="/user/update"/>
+       <!-- <mvc:mapping path="/selectUserByUsername"/> -->
+            <mvc:mapping path="/user/selectUserByUserId"/>
             <bean class="com.scnu.interceptor.LoginInterceptor"></bean>
        </mvc:interceptor>
    </mvc:interceptors>
