@@ -40,16 +40,18 @@ public class UserController {
 		int num = userService.checkRegister(user);
 		
 		// 注册失败
-		if(num == 0)
-	    return ScnuResult.registerFailureNull();
-		else if(num == 1)
-		return ScnuResult.registerFailureUsername();
-		else if(num == 2)
-		return ScnuResult.registerFailureEmail();
-		else if(num == 3)
-		return ScnuResult.registerFailureTelephone();
-		else if(num == 4)
-		return ScnuResult.registerFailureSpace();
+		if(num == 0) {
+	       return ScnuResult.forbidden("账号或者密码不能为空");
+		}
+		else if(num == 1) {
+		   return ScnuResult.forbidden("注册失败，用户名冲突!");
+		}
+		else if(num == 2) {
+		   return ScnuResult.forbidden("注册失败，邮箱冲突!");
+		}
+		else if(num == 4) {
+		   return ScnuResult.forbidden("注册失败，账号或者密码不能带有空格!");
+		}
 		
 		boolean taf = false;
 		// 通过检测 ，准备注册
@@ -57,15 +59,13 @@ public class UserController {
 		
 		if(taf) // 注册成功   返回账号 username
 		{
-		String username = user.getUsername();
-		ScnuResult msg = new ScnuResult();
-		msg.setCode(Const.SUCCESS);
-		msg.setStatus("欢迎您:  " + username + " !");
-		return msg;
+		   String username = user.getUsername();
+		   String data = "欢迎您:  " + username + " !";
+		   return ScnuResult.build(data);
 		}
 		
 		// 原则上不可能到这里，注册失败
-		return null;
+		return ScnuResult.forbidden("注册失败");
 		
 	}
 	
@@ -73,6 +73,11 @@ public class UserController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ResponseBody
 	public ScnuResult Login(@Param("user") User user, HttpServletRequest request, HttpServletResponse response) {
+		
+		// 检验空值的情况
+		if(user == null || user.getUsername() == null || user.getPassword() == null) {
+		   return ScnuResult.forbidden("登录失败，账号或者密码为空值!");
+		}
 		
 		boolean taf = false;
 		taf = userService.Login(user);
@@ -85,27 +90,32 @@ public class UserController {
 		   session.setAttribute(userSessionID, realUser);
 		   // 设置Cookie，有效期是30分钟
 		   CookieUtil.setCookie(response, Const.userCookieKey, userSessionID);
-		   return ScnuResult.loginSuccess();
+		   return ScnuResult.build(realUser.getUsername());
 		}
 		
 		// 登录失败
-		return ScnuResult.loginFailure();
+		return ScnuResult.forbidden("登录失败，账号或者密码错误!");
 		
 	}
 	
-	// 修改密码，需要输入原来的密码验证
+	// 修改密码，需要输入原来的密码验证，并且需要处于登录状态
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseBody
-	public ScnuResult Update(@Param("user") User user, String restPassword) {
+	public ScnuResult Update(String password, String restPassword, HttpServletRequest request) {
 		
+		String userId = CookieUtil.getUserID(request);
+		if(password == null || restPassword == null) {
+			 return ScnuResult.forbidden("原来的密码或者重置的密码不能为空");
+		}
 		boolean taf = false;
-		taf = userService.Update(user, restPassword);
+		taf = userService.Update(userId, password, restPassword);
 		// 更新成功
-		if(taf)
-		return ScnuResult.updateSuccess();
-		
+		if(taf) {
+		    return ScnuResult.build("更新密码成功");
+		}
 		// 更新失败
-		return ScnuResult.updateFailure();
+		return ScnuResult.forbidden("原来的密码错误");
+		
 	}
 	
 	// 忘记密码，需要邮箱验证码来验证, 从而修改密码
@@ -120,12 +130,11 @@ public class UserController {
 		   }
 		   if(validateCode.equals(code)) {
 			   User user = userService.getUserByUserName(validateUsername);
-			   boolean taf = userService.Update(user, restPassword);
+			   boolean taf = userService.Update(user.getId(), user.getPassword(), restPassword);
 			   if(taf) {
 				    // 删除原来的验证码信息
 				    session.removeAttribute(Const.VALIDATA_CODE);
 				    session.removeAttribute(Const.VALIDATE_USERNAME);
-				    session.setMaxInactiveInterval(0);
 			        return ScnuResult.build("修改密码成功");
 			   }
 		   }else {
@@ -162,33 +171,39 @@ public class UserController {
 		   return ScnuResult.build(email);
 	}
 	
-	// 退出登录
+	// 注销
 	@RequestMapping("/logout")
 	@ResponseBody
 	public ScnuResult logout(HttpServletRequest request) {
 		HttpSession session = request.getSession();
 		session.invalidate();
-		return ScnuResult.build("退出成功");
+		return ScnuResult.build("注销成功");
 	}
 	
-	// 查询本地用户，通过username查询
-	@RequestMapping(value = "/selectUserByUsername", method = RequestMethod.POST)
+	// 查询本地用户，通过username查询， 方便调试
+	@RequestMapping(value = "/selectUserByUsername", method = RequestMethod.GET)
 	@ResponseBody
 	public ScnuResult getUserByUsername(String username) {
 		   if(username == null) {
 			  ScnuResult.build(null);
 		   }
-		   return ScnuResult.build(userService.getUserByUserName(username));
+		   User user = userService.getUserByUserName(username);
+		   // 没有将用户的id和密码置空
+		   // user.setId(null);
+		   // user.setPassword(null);
+		   return ScnuResult.build(user);
 	}
 	
-	// 查询本地用户，通过userId查询
-	@RequestMapping(value = "/selectUserByUserId", method = RequestMethod.POST)
+	// 查询本地用户，通过userId查询，需要处理登录状态
+	@RequestMapping(value = "/selectUserByUserId", method = RequestMethod.GET)
 	@ResponseBody
-    public ScnuResult getUserByUserId(String userId) {
-    	   if(userId == null) {
-    		  ScnuResult.build(null);
-		   }
-    	   return ScnuResult.build(userService.getUserByUserId(userId));
+    public ScnuResult getUserByUserId(HttpServletRequest request) {
+    	   String userId = CookieUtil.getUserID(request);
+    	   User user = userService.getUserByUserId(userId);
+		   // 将用户的id和密码置空
+		   user.setId(null);
+		   user.setPassword(null);
+		   return ScnuResult.build(user);
 	}
 
 }

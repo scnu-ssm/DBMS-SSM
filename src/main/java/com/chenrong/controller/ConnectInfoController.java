@@ -46,7 +46,7 @@ public class ConnectInfoController {
 		return ScnuResult.connectInfoInsertFailure();
 	}
 	
-	@RequestMapping(value = "/selectByConnectId", method = RequestMethod.POST)
+	@RequestMapping(value = "/selectByConnectId", method = RequestMethod.GET)
 	@ResponseBody
 	// 查找连接信息
 	// 主要通过 conenctId 查找记录
@@ -61,10 +61,13 @@ public class ConnectInfoController {
 		ConnectInfo selectConnectInfo = connectInfoService.selectByConnectId(connectId);
 		
 		// 查找连接信息失败
-		if(selectConnectInfo == null)
-		return ScnuResult.connectInfoSelectFailure();
-		
+		if(selectConnectInfo == null) {
+		   return ScnuResult.connectInfoSelectFailure();
+		}
 		System.out.println(selectConnectInfo.toString());
+		
+		// 将UserId的信息置空
+		selectConnectInfo.setUserId(null);
 		
 		// 查找连接信息成功
 		return ScnuResult.build(selectConnectInfo);
@@ -114,6 +117,10 @@ public class ConnectInfoController {
 	public ScnuResult selectConnectByUserId(HttpServletRequest request) {
 		String userId = CookieUtil.getUserID(request);
 		List<ConnectInfo> list = connectInfoService.selectByUserId(userId);
+		// 将UserId的信息置空
+		for(ConnectInfo connect : list) {
+			connect.setUserId(null);
+		}
 		return ScnuResult.build(list);
 	}
 

@@ -90,15 +90,13 @@ public class UserService {
 	// 用户修改
 	/**
 	 * '1' 表示修改成功，'0'表示修改失败
-	 * @param user
 	 * @return
 	 */
-	public boolean Update(User user, String restPassword) {
-		int num = userMapper.updateByPrimaryKeySelective(user.getId(), user.getPassword(), restPassword);
-		
-		if(num == 1)
-		return true;
-		
+	public boolean Update(String userId, String password, String restPassword) {
+		int num = userMapper.updateByPrimaryKeySelective(userId, password, restPassword);
+		if(num >= 1) {
+		   return true;
+		}
 		return false;
 	}
 	
