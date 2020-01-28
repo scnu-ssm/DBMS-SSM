@@ -44,15 +44,6 @@ public class ScnuResult {
     	
     }
     
-    // 注册时电话冲突
-    public static ScnuResult registerFailureTelephone() {
-    	ScnuResult msg = new ScnuResult();
-    	msg.code = Const.FAILURE;
-    	msg.status = Const.REGISTER_FAILURE_TELEPHONE;
-    	
-    	return msg;
-    	
-    }
     
     // 注册时账号密码为空
     public static ScnuResult registerFailureNull() {

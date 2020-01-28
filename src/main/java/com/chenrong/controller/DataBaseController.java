@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.chenrong.bean.DataBaseProperty;
 import com.chenrong.bean.ScnuResult;
@@ -18,7 +19,7 @@ public class DataBaseController {
 	
 	
 	// 创建数据库
-	@RequestMapping("/createDateBase")
+	@RequestMapping(value = "/createDateBase",  method = RequestMethod.POST)
 	@ResponseBody
 	public ScnuResult createDateBase(String connectId, String databaseName, String characterSetDatabase, String collationDatabase) {
 		
@@ -50,7 +51,7 @@ public class DataBaseController {
 	}
 	
 	// 删除数据库
-	@RequestMapping("/deleteDateBase")
+	@RequestMapping(value = "/deleteDateBase", method = RequestMethod.POST)
 	@ResponseBody
 	public ScnuResult deleteDateBase(String connectId, String databaseName) {
 		
@@ -107,7 +108,7 @@ public class DataBaseController {
 	
 	
 	// 修改数据库的属性
-    @RequestMapping("/updateDataBase")
+    @RequestMapping(value = "/updateDataBase",  method = RequestMethod.POST)
     @ResponseBody
     public ScnuResult updateDataBase(String connectId, String databaseName, String characterSetDatabase, String collationDatabase) {
     	
@@ -125,4 +126,5 @@ public class DataBaseController {
     	}
     	
     }
+    
 }
