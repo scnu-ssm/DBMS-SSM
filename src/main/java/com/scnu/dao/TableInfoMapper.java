@@ -1,4 +1,4 @@
-package com.zichang.dao;
+package com.scnu.dao;
 
 import java.util.List;
 import java.util.Map;

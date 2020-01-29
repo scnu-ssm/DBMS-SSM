@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.scnu.dao.TableInfoMapper;
 import com.zichang.bean.Fields;
 import com.zichang.bean.ForeignKey;
 import com.zichang.bean.Indexes;
-import com.zichang.dao.TableInfoMapper;
 
 public class TableInfoTool {
 	
