@@ -46,17 +46,19 @@ public class TableInfoTool {
 	
 	public static List<ForeignKey> getForeignkeyList(JSONArray jsonArray){
 		List<ForeignKey> foreignKeys = new ArrayList<ForeignKey>();
-		for(int i=0; i<jsonArray.size(); i++) {
-			ForeignKey f = new ForeignKey();
-			JSONObject jsonObject = jsonArray.getJSONObject(i);
-			f.setName(jsonObject.getString("name"));
-			f.setField(jsonObject.getString("field"));
-			f.setWithDatabase(jsonObject.getString("withDatabase"));
-			f.setWithTable(jsonObject.getString("withTable"));
-			f.setWithField(jsonObject.getString("withField"));
-			f.setDelete(jsonObject.getString("delete"));
-			f.setUpdate(jsonObject.getString("update"));
-			foreignKeys.add(f);
+		if(jsonArray != null) {
+			for(int i=0; i<jsonArray.size(); i++) {
+				ForeignKey f = new ForeignKey();
+				JSONObject jsonObject = jsonArray.getJSONObject(i);
+				f.setName(jsonObject.getString("name"));
+				f.setField(jsonObject.getString("field"));
+				f.setWithDatabase(jsonObject.getString("withDatabase"));
+				f.setWithTable(jsonObject.getString("withTable"));
+				f.setWithField(jsonObject.getString("withField"));
+				f.setDelete(jsonObject.getString("delete"));
+				f.setUpdate(jsonObject.getString("update"));
+				foreignKeys.add(f);
+			}
 		}
 		return foreignKeys;
 	}

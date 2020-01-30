@@ -47,7 +47,7 @@ public class TableInfoController {
 	@ResponseBody
 	public ScnuResult dropTable(String connectId, String database, String table) {
 		try {
-			if (tableInfoService.dropTable(connectId, database, table) >= 1) {
+			if (tableInfoService.dropTable(connectId, database, table) >= 0) {
 				return ScnuResult.build("删除表成功");
 			}
 		} catch (Exception e) {
@@ -61,7 +61,7 @@ public class TableInfoController {
 	@ResponseBody
 	public ScnuResult truncateTable(String connectId, String database, String table) {
 		try {
-			if (tableInfoService.truncateTable(connectId, database, table) >= 1) {
+			if (tableInfoService.truncateTable(connectId, database, table) >= 0) {
 				return ScnuResult.build("清空表成功");
 			}
 		} catch (Exception e) {
@@ -73,23 +73,25 @@ public class TableInfoController {
 	//创建表
 	@RequestMapping(value = "/createtable", method = RequestMethod.POST)
 	@ResponseBody
-	public ScnuResult createTable( String connectId,
-							   String database, 
-							   String table,
-							   List<Fields> fields,
-							   List<Indexes> indexes,
-							   List<ForeignKey> foreignKeys, @RequestBody String jsonStr) {
+	public ScnuResult createTable(
+//							   String database, 
+//							   String table,
+//							   List<Fields> fields,
+//							   List<Indexes> indexes,
+//							   List<ForeignKey> foreignKeys, 
+							   @RequestBody String jsonStr) {
 //		System.out.println("json = " + jsonStr);
 		JSONObject json = JSONObject.parseObject(jsonStr);
 		JSONArray arr = json.getJSONArray("fields");
-		JSONArray arr2 = json.getJSONArray("indexes");
+//		JSONArray arr2 = json.getJSONArray("indexes");
 		JSONArray arr3 = json.getJSONArray("foreignKeys");
 		String db = json.getString("database");
 		String tb = json.getString("table");
+		String connectId = json.getString("connectId");
 		List<Fields> fieldsList = new ArrayList<Fields>();
 		fieldsList = TableInfoTool.getFieldList(arr);
-		List<Indexes> indexesList = new ArrayList<Indexes>();
-		indexesList = TableInfoTool.getIndexesList(arr2);
+//		List<Indexes> indexesList = new ArrayList<Indexes>();
+//		indexesList = TableInfoTool.getIndexesList(arr2);
 		List<ForeignKey> foreignKeyList = new ArrayList<ForeignKey>();
 		foreignKeyList = TableInfoTool.getForeignkeyList(arr3);
 //		System.out.println(db);
@@ -98,7 +100,7 @@ public class TableInfoController {
 //		System.out.println(indexesList.get(0).toString());
 //		System.out.println(foreignKeyList.get(0).toString());
 		try {
-			if (tableInfoService.createTable(connectId, database, table, fieldsList, indexesList, foreignKeys) >= 1) {
+			if (tableInfoService.createTable(connectId, db, tb, fieldsList, foreignKeyList) >= 0) {
 				return ScnuResult.build("创建表成功");
 			}
 		} catch (Exception e) {
@@ -156,7 +158,7 @@ public class TableInfoController {
 							String table,
 							String field){
 		try {
-			if(tableInfoService.dropField(connectId, database, table, field) >= 1)
+			if(tableInfoService.dropField(connectId, database, table, field) >= 0)
 				return ScnuResult.build("删除字段成功");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -183,7 +185,7 @@ public class TableInfoController {
 		f.setPrimary(jsonObject.getIntValue("primary"));
 		
 		try {
-			if(tableInfoService.changeField(connectId, db, tb, fname, f) >= 1)
+			if(tableInfoService.changeField(connectId, db, tb, fname, f) >= 0)
 				return ScnuResult.build("修改字段成功");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -210,7 +212,7 @@ public class TableInfoController {
 	@ResponseBody
 	public ScnuResult renameTable(String connectId, String database, String table, String rename){
 		try {
-			if(tableInfoService.renameTable(connectId, database, table, rename) >= 1)
+			if(tableInfoService.renameTable(connectId, database, table, rename) >= 0)
 				return ScnuResult.build("重命名字段成功");
 		} catch (Exception e) {
 			e.printStackTrace();

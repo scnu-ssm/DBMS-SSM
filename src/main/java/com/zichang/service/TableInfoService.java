@@ -41,7 +41,9 @@ public class TableInfoService {
 		SqlSession sqlSession = connectManager.getSessionAutoCommitByConnectId(connectId);
 		try {
 			TableInfoMapper mapper = sqlSession.getMapper(TableInfoMapper.class);
-			return mapper.dropTable(map);
+			int num = mapper.dropTable(map);
+//			System.out.println("num:"+num);
+			return num;
 		} finally {
 			sqlSession.close();
 		}
@@ -62,11 +64,11 @@ public class TableInfoService {
 	}
 	
 	//´´½¨±í
-	public int createTable(String connectId, String database, String table, List<Fields> fields, List<Indexes> indexes, List<ForeignKey> foreignKeys) throws Exception{
+	public int createTable(String connectId, String database, String table, List<Fields> fields, List<ForeignKey> foreignKeys) throws Exception{
 		SqlSession sqlSession = connectManager.getSessionAutoCommitByConnectId(connectId);
 		try {
 			TableInfoMapper mapper = sqlSession.getMapper(TableInfoMapper.class);
-			return mapper.createTable(database, table, fields, indexes, foreignKeys);
+			return mapper.createTable(database, table, fields, foreignKeys);
 		} finally {
 			sqlSession.close();
 		}
