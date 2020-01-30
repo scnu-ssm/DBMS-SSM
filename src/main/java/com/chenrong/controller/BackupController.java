@@ -1,14 +1,16 @@
 package com.chenrong.controller;
 
+import java.io.File;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.chenrong.bean.ConnectInfo;
+import com.chenrong.bean.ConnectVO;
 import com.chenrong.bean.ScnuResult;
 import com.chenrong.service.BackupService;
-import com.chenrong.service.ConnectInfoService;
 
 @Controller
 @RequestMapping("/mysql")
@@ -18,7 +20,7 @@ public class BackupController {
 	BackupService backupService;
 	
 	// 备份控制器 导出sql
-	@RequestMapping("/backup")
+	@RequestMapping(value = "/backup", method=RequestMethod.POST)
 	@ResponseBody
 	public ScnuResult BackUp(String conenctId, String database, String dest) {
 		
@@ -34,7 +36,7 @@ public class BackupController {
 	
 	
 	// 还原控制器 导入sql
-	@RequestMapping("/recovery")
+	@RequestMapping(value = "/recovery", method = RequestMethod.POST)
 	@ResponseBody
 	public ScnuResult Recovery(String conenctId, String database, String src) {
 		
@@ -53,5 +55,24 @@ public class BackupController {
 		}
 		
 	}
+	
+    // 导出内容到csv文件中
+    @RequestMapping(value = "/leadingOutCSV", method = RequestMethod.POST)
+    @ResponseBody
+    public ScnuResult leadingOutCSV(ConnectVO connectVO, String dest) {
+
+    	if(connectVO == null || connectVO.getConnectId() == null || 
+    	   connectVO.getDatabase() == null || connectVO.getTable() == null || dest == null) {
+    		    return ScnuResult.forbidden("导出内容失败");
+    	}
+    	try {
+          backupService.leadingOutCSV(connectVO, dest);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ScnuResult.forbidden("服务器发生异常错误");
+		}
+    	return ScnuResult.build("导出内容成功");
+    	
+    }
  
 }
