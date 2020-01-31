@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.zichang.dao.TableInfoMapper">
+<mapper namespace="com.scnu.dao.TableInfoMapper">
 	<!-- 查找数据库表名 -->
 	<select id="showTables" parameterType="string" resultType="string">
 		SELECT table_name FROM information_schema.`TABLES` WHERE table_schema=#{databaseName}
@@ -39,11 +39,12 @@
 				${item2.type} INDEX ${item2.name}(${item2.field}) USING ${item2.method}
 			</foreach>
 		</if> -->
-<!-- 		<if test="foreignkeys != null and foreignkeys.size()>0">
+ 		<if test="foreignkeys != null and foreignkeys.size()!= 0">
+ 			,
 			<foreach collection="foreignkeys" separator="," item="item3">
 				CONSTRAINT ${item3.name} FOREIGN KEY(${item3.field}) REFERENCES ${item3.withDatabase}.${item3.withTable}(${item3.withField}) ON DELETE ${item3.delete} ON UPDATE ${item3.update}
 			</foreach>
-		</if> -->
+		</if>
 		) 
 
 	</update>

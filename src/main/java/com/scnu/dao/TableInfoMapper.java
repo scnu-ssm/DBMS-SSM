@@ -1,4 +1,4 @@
-package com.zichang.dao;
+package com.scnu.dao;
 
 import java.util.List;
 import java.util.Map;
@@ -25,7 +25,7 @@ public interface TableInfoMapper {
 //					@Param("fields")List<Fields> fields, //×Ö¶Î
 //					@Param("indexes")List<Indexes> indexes, //Ë÷Òý
 //					@Param("foreignkeys")List<ForeignKey> foreignkeys);//Íâ¼ü
-	int createTable(@Param("database")String database, @Param("table")String table, @Param("fields")List<Fields> fields, @Param("indexes")List<Indexes> indexes, @Param("foreignkeys")List<ForeignKey> foreignkeys);
+	int createTable(@Param("database")String database, @Param("table")String table, @Param("fields")List<Fields> fields,  @Param("foreignkeys")List<ForeignKey> foreignkeys);
 	
 	List<String> showColumns(@Param("database")String database, @Param("table")String table);
 	

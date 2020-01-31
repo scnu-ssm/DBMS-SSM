@@ -13,4 +13,7 @@ encoding//src/main/java/com/scnu/dao=GBK
 encoding//src/main/java/com/scnu/interceptor=GBK
 encoding//src/main/java/com/scnu/util=GBK
 encoding//src/main/java/com/zichang/bean=GBK
+encoding//src/main/java/com/zichang/controller=GBK
+encoding//src/main/java/com/zichang/service=GBK
+encoding//src/main/java/com/zichang/util=GBK
 encoding//src/test/java=UTF-8

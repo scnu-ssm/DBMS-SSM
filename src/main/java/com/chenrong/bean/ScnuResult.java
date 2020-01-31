@@ -180,6 +180,16 @@ public class ScnuResult {
     	
     }
     
+    //操作失败，创建响应体
+    public static ScnuResult buildFalure(Object oj) {
+    	ScnuResult msg = new ScnuResult();
+    	msg.code = Const.FAILURE;
+    	msg.status = "失败";
+    	msg.setData(oj);
+    	
+    	return msg;
+    }
+    
 	//违法操作
     public static ScnuResult forbidden(Object oj) {
     	ScnuResult msg = new ScnuResult();
