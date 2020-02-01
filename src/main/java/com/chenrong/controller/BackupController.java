@@ -81,7 +81,7 @@ public class BackupController {
 			e.printStackTrace();
 			return ScnuResult.forbidden("服务器发生异常错误");
 		}
-    	return ScnuResult.build("导出内容成功");
+    	return ScnuResult.build("导出内容到CSV文件成功");
     	
     }
     
