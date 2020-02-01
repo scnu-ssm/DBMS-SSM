@@ -219,4 +219,49 @@ public class TableInfoController {
 		}
 		return ScnuResult.buildFalure("重命名字段失败");
 	}
+	
+	//查询外键
+	@RequestMapping(value="/allfk", method=RequestMethod.POST)
+	@ResponseBody
+	public ScnuResult allfk(String connectId, String database, String table) {
+		List<ForeignKey> list = new ArrayList<>();
+		try {
+			list = tableInfoService.allfk(connectId, database, table);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ScnuResult.build(list);
+	}
+	
+	//删除外键
+	@RequestMapping(value="/deletefk", method=RequestMethod.POST)
+	@ResponseBody
+	public ScnuResult deletefk(String connectId, String database, String table, String fname) {
+		try {
+			if(tableInfoService.deletefk(connectId, database, table, fname) >= 0)
+				return ScnuResult.build("删除成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ScnuResult.buildFalure("删除失败");
+	}
+	
+	//添加外键
+	@RequestMapping(value="/insertfk", method=RequestMethod.POST)
+	@ResponseBody
+	public ScnuResult insertfk(@RequestBody String jsonStr) {
+		JSONObject json = JSONObject.parseObject(jsonStr);
+		String connectId = json.getString("connectId");
+		String database = json.getString("database");
+		String table = json.getString("table");
+		ForeignKey fk = json.getObject("fk", ForeignKey.class);
+//		System.out.println(fk.toString());
+		try {
+			if(tableInfoService.insertfk(connectId, database, table, fk) >= 0)
+				return ScnuResult.build("添加外键成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ScnuResult.buildFalure("添加外键失败");
+	}
 }

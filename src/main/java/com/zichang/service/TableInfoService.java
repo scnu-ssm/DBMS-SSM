@@ -5,11 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.chenrong.bean.ScnuResult;
+import com.mysql.cj.Session;
 import com.scnu.dao.TableInfoMapper;
 import com.scnu.util.ConnectManager;
 import com.zichang.bean.Fields;
@@ -157,6 +159,39 @@ public class TableInfoService {
 		try {
 			TableInfoMapper mapper = sqlSession.getMapper(TableInfoMapper.class);
 			return mapper.renameTable(database, table, rename);
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	//查询外键
+	public List<ForeignKey> allfk(String connectId, String database, String table) throws Exception{
+		SqlSession sqlSession = connectManager.getSessionAutoCommitByConnectId(connectId);
+		try {
+			TableInfoMapper mapper = sqlSession.getMapper(TableInfoMapper.class);
+			return mapper.allfk(database, table);
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	//删除外键
+	public int deletefk(String connectId, String database, String table, String fname) throws Exception{
+		SqlSession sqlSession = connectManager.getSessionAutoCommitByConnectId(connectId);
+		try {
+			TableInfoMapper mapper = sqlSession.getMapper(TableInfoMapper.class);
+			return mapper.deletefk(database, table, fname);
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	//添加外键
+	public int insertfk(String connectId, String database, String table, ForeignKey fk) throws Exception{
+		SqlSession sqlSession = connectManager.getSessionAutoCommitByConnectId(connectId);
+		try {
+			TableInfoMapper mapper = sqlSession.getMapper(TableInfoMapper.class);
+			return mapper.insertfk(database, table, fk);
 		} finally {
 			sqlSession.close();
 		}

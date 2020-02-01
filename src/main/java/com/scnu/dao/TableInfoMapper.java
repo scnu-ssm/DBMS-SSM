@@ -38,4 +38,15 @@ public interface TableInfoMapper {
 	List<Map<String, Object>> showTableMsg(@Param("database")String database, @Param("table")String table);
 	
 	int renameTable(@Param("database")String database, @Param("table")String table, @Param("rename")String rename);
+	
+	//查询表外键
+	List<ForeignKey> allfk(@Param("database")String database, @Param("table")String table);
+	
+	//删除外键
+	int deletefk(@Param("database")String database, @Param("table")String table, @Param("fname")String fname);
+	
+	//添加外键
+	int insertfk(@Param("database")String database, @Param("table")String table, @Param("fk")ForeignKey fk);
+	
+	
 }
