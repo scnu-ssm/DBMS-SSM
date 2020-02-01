@@ -13,10 +13,6 @@ public class CookieUtil {
 	// 默认30分钟有效时间
 	public final static Integer expireTime = 1800;
 	
-	public final static String DEMAIN = "localhost";  // Cookie的域
-	
-	public final static String PATH = "/";  // Cookie的路径
-	
 	// 根据key获取Cookie的value; 
 	// key不区分大小写
 	public static String getCookieValue(HttpServletRequest request, String Key) {
@@ -38,12 +34,12 @@ public class CookieUtil {
 		   setCookie(response, key, value, expireTime);
 	}
 	
-	// 设置Cookie，可以自主设置过期时间
+	// 设置Cookie的domain、path、expire
 	public static void setCookie(HttpServletResponse response, String key, String value, Integer expire) {
 		   Cookie cookie = new Cookie(key, value);
 		   cookie.setMaxAge(expire);
-		   cookie.setDomain(DEMAIN);
-		   cookie.setPath(PATH);
+		   cookie.setDomain(Const.cookieDomain);
+		   cookie.setPath(Const.cookiePath);
 		   response.addCookie(cookie);
 	}
 	

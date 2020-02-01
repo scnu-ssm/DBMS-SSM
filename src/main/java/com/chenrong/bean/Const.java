@@ -55,6 +55,11 @@ public class Const {
 	
 	public static final String anonymousCookieKey = "Anonymous";
 	
+	// Cookie的domain、path
+	public static final String cookieDomain = "localhost";  // Cookie的域
+	
+	public static final String cookiePath = "/";  // Cookie的路径
+	
 	// Session的Key值
 	public static final String USERID = "userId";
 	
