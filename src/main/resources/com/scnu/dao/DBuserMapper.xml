@@ -23,12 +23,12 @@
 	
 	<!-- 查询所有用户 -->
 	<select id="showUsers" resultType="com.zichang.bean.DBuser">
-		select user,host,password from mysql.user
+		select user,host from mysql.user
 	</select>
 	
 	<!-- 根据user,host查询用户 -->
 	<select id="selectUserByName" resultType="com.zichang.bean.DBuser">
-		select user,host,password from mysql.user where user=#{username} and host=#{host}
+		select user,host,authentication_string as password from mysql.user where user=#{username} and host=#{host}
 	</select>
 	
 	<!-- 修改密码 -->
