@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chenrong.dao.ConnectInfoMapper">
+  <resultMap id="BaseResultMap" type="com.chenrong.bean.ConnectInfo">
+    <id column="connect_id" jdbcType="VARCHAR" property="connectId" />
+    <result column="user_Id" jdbcType="VARCHAR" property="userId" />
+    <result column="connect_Name" jdbcType="VARCHAR" property="connectName" />
+    <result column="host" jdbcType="VARCHAR" property="host" />
+    <result column="port" jdbcType="INTEGER" property="port" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="isSave" jdbcType="TINYINT" property="isSave" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    connect_Id, user_Id, connect_Name, host, port, username, password, isSave
+  </sql>
+  
+  <insert id="insert" parameterType="com.chenrong.bean.ConnectInfo">
+      insert into 
+      SCNU_ConnectInfo(connect_Id, user_Id, connect_Name, host, port, username, password, isSave)
+      values(#{connectId, jdbcType=VARCHAR}, #{userId, jdbcType=VARCHAR}, #{connectName, jdbcType=VARCHAR}, 
+      #{host, jdbcType=VARCHAR}, #{port, jdbcType=INTEGER}, #{username, jdbcType=VARCHAR},
+      #{password, jdbcType=VARCHAR}, #{isSave, jdbcType=TINYINT})
+  </insert>
+  
+  <select id="selectByUserId" parameterType="string" resultMap="BaseResultMap">
+      select
+      <include refid="Base_Column_List" />
+      from SCNU_ConnectInfo
+      where user_Id = #{userId, jdbcType=VARCHAR} order by connect_Name 
+  </select>
+  
+  <select id="selectByConnectId" parameterType="string" resultMap="BaseResultMap">
+      select
+      <include refid="Base_Column_List" />
+      from SCNU_ConnectInfo
+      where connect_Id = #{connectId, jdbcType=VARCHAR}
+  </select>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.chenrong.bean.ConnectInfo">
+      update SCNU_ConnectInfo set
+            connect_Name = #{connectName, jdbcType=VARCHAR},
+            host = #{host, jdbcType=VARCHAR},
+            port = #{port, jdbcType=INTEGER},
+            username = #{username, jdbcType=VARCHAR},
+            password = #{password, jdbcType=VARCHAR},
+            isSave = #{isSave, jdbcType=TINYINT}
+      where connect_Id = #{connectId, jdbcType=VARCHAR}
+  </update>
+  
+  <delete id="deleteByPrimaryKey" parameterType="string">
+      delete from SCNU_ConnectInfo
+      where connect_Id = #{connectId, jdbcType=VARCHAR}
+  </delete>
+  
+</mapper>
