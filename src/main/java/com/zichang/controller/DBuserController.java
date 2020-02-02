@@ -116,15 +116,15 @@ public class DBuserController {
 	public ScnuResult updatePwd(String connectId, String username, String host, String pwd) {
 		ConnectInfo connectInfo = connectInfoService.selectByConnectId(connectId);
 		String uname = connectInfo.getUsername();
-		if(!uname.equals(username))
-			return ScnuResult.buildFalure("不能修改非当前连接用户密码");
-		try {
-			if(dBuserService.updatePwd(connectId, username, host, pwd) >= 0)
-				return ScnuResult.build("修改成功");
-		} catch (Exception e) {
-			e.printStackTrace();
+		if("root".equals(uname)) {
+			try {
+				if(dBuserService.updatePwd(connectId, username, host, pwd) >= 0)
+					return ScnuResult.build("修改成功");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
-		return ScnuResult.buildFalure("修改失败");
+		return ScnuResult.buildFalure("非root用户不能修改密码");
 	}
 	
 	//查询权限
