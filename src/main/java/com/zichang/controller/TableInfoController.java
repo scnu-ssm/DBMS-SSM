@@ -264,4 +264,48 @@ public class TableInfoController {
 		}
 		return ScnuResult.buildFalure("添加外键失败");
 	}
+	
+	//查询主键
+	@RequestMapping(value="/selectpk", method=RequestMethod.POST)
+	@ResponseBody
+	public ScnuResult selectpk(String connectId, String database, String table) {
+		List<String> list = new ArrayList<>();
+		try {
+			list = tableInfoService.selectpk(connectId, database, table);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ScnuResult.build(list);
+	}
+	
+	//设置主键
+	@RequestMapping(value="/setpk", method=RequestMethod.POST)
+	@ResponseBody
+	public ScnuResult setpk(String connectId, String database, String table, String field) {
+		int i = -1;
+		try {
+			i = tableInfoService.setpk(connectId, database, table, field);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+//		System.out.println("主键重复返回值i="+i);
+		if(i >= 0) {
+			return ScnuResult.build("设置主键成功");
+		}else {
+			return ScnuResult.buildFalure("主键唯一");
+		}
+	}
+	
+	//删除主键
+	@RequestMapping(value="/deletepk", method=RequestMethod.POST)
+	@ResponseBody
+	public ScnuResult deletepk(String connectId, String database, String table) {
+		try {
+			if(tableInfoService.deletepk(connectId, database, table) >= 0)
+				return ScnuResult.build("删除主键成功");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return ScnuResult.buildFalure("删除主键失败");
+	}
 }

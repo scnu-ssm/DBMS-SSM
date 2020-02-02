@@ -148,4 +148,20 @@
        ON DELETE ${fk.delete}
        ON UPDATE ${fk.update}
 	 </update>
+	 
+	 <!-- 查询主键 -->
+	 <select id="selectpk" resultType="string">
+	 	SELECT COLUMN_NAME FROM information_schema.`KEY_COLUMN_USAGE` 
+	 	where TABLE_SCHEMA = #{database} and TABLE_NAME = #{table} and CONSTRAINT_NAME = 'PRIMARY';
+	 </select>
+	 
+	 <!-- 设置主键 -->
+	 <update id="setpk">
+	 	ALTER TABLE ${database}.${table} ADD CONSTRAINT PRIMARY KEY(${field});
+	 </update>
+	 
+	 <!-- 取消主键 -->
+	 <update id="deletepk">
+	 	alter table ${database}.${table} drop primary key;
+	 </update>
 </mapper>

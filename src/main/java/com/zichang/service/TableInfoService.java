@@ -196,4 +196,36 @@ public class TableInfoService {
 			sqlSession.close();
 		}
 	}
+	
+	//查询主键
+	public List<String> selectpk(String connectId, String database, String table) throws Exception{
+		SqlSession sqlSession = connectManager.getSessionAutoCommitByConnectId(connectId);
+		try {
+			TableInfoMapper mapper = sqlSession.getMapper(TableInfoMapper.class);
+			return mapper.selectpk(database, table);
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	//设置主键
+	public int setpk(String connectId, String database, String table, String field) throws Exception{
+		SqlSession sqlSession = connectManager.getSessionAutoCommitByConnectId(connectId);
+		try {
+			TableInfoMapper mapper = sqlSession.getMapper(TableInfoMapper.class);
+			return mapper.setpk(database, table, field);
+		} finally {
+			sqlSession.close();
+		}
+	}
+	
+	public int deletepk(String connectId, String database, String table) throws Exception{
+		SqlSession sqlSession = connectManager.getSessionAutoCommitByConnectId(connectId);
+		try {
+			TableInfoMapper mapper = sqlSession.getMapper(TableInfoMapper.class);
+			return mapper.deletepk(database, table);
+		} finally {
+			sqlSession.close();
+		}
+	}
 }

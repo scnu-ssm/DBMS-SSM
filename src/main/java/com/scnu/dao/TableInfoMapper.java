@@ -48,5 +48,12 @@ public interface TableInfoMapper {
 	//添加外键
 	int insertfk(@Param("database")String database, @Param("table")String table, @Param("fk")ForeignKey fk);
 	
+	//查询主键
+	List<String> selectpk(@Param("database")String database, @Param("table")String table);
 	
+	//设置主键
+	int setpk(@Param("database")String database, @Param("table")String table, @Param("field")String field);
+	
+	//取消主键
+	int deletepk(@Param("database")String database, @Param("table")String table);
 }
