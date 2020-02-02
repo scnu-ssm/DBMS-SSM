@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.chenrong.bean.Page;
 import com.chenrong.bean.RecordSet;
 import com.chenrong.bean.ScnuResult;
 import com.chenrong.bean.TableVO;
@@ -27,6 +28,7 @@ public class TableController {
 	@Autowired
 	TableInfoService tableInfoService;
 	
+	// 删除单条数据记录
 	@RequestMapping(value = "delete", method = RequestMethod.POST)
 	@ResponseBody
 	public ScnuResult deleteRecord(@RequestBody TableVO tableVO) {
@@ -49,12 +51,16 @@ public class TableController {
 		
 	}
 	
-	@RequestMapping("/update")
+	// 批量删除数据记录
+	
+	
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	@ResponseBody
 	public ScnuResult updateRecord(@RequestBody TableVO tableVO) {
 		
 		
-		if(tableVO == null || tableVO.getConnectId() == null || tableVO.getDatabase() == null ||tableVO.getTable() == null || tableVO.getOldRecord() == null) {
+		if(tableVO == null || tableVO.getConnectId() == null || tableVO.getDatabase() == null ||
+		   tableVO.getTable() == null || tableVO.getOldRecord() == null || tableVO.getNewRecord() == null) {
 		    return ScnuResult.forbidden("操作被拒绝，所请求的参数缺失错误");
 	    }
 	    try {
@@ -73,7 +79,7 @@ public class TableController {
 	    
 	}
 	
-	@RequestMapping("/insert")
+	@RequestMapping(value = "/insert", method = RequestMethod.POST)
 	@ResponseBody
 	public ScnuResult insertRecord(@RequestBody TableVO tableVO) {
 		
@@ -97,15 +103,40 @@ public class TableController {
 		      return ScnuResult.forbidden("操作被拒绝，所请求的参数缺失错误");
 	    }
 		
+		// 设置页码和排序方式
+		if(tableVO.getCurrent() == null || tableVO.getCurrent() < 1) {
+			// 默认首页
+			tableVO.setCurrent(1);
+		}
+		if(tableVO.getOrderType() == null) {
+			// 默认升序
+			tableVO.setOrderType("asc");
+		}
+		
 		try {
 		   RecordSet recordSet = new RecordSet();
 		   // 查询数据表的字段
 		   List<String> columnsName = tableInfoService.showColumns(tableVO.getConnectId(), tableVO.getDatabase(), tableVO.getTable());
 		   // 查询数据表的主键
-		
+		   List<String> primaryKeys = tableInfoService.selectpk(tableVO.getConnectId(), tableVO.getDatabase(), tableVO.getTable());
 		   // 查询数据表的记录集合
 		   List<Map<String, Object>> records = tableService.selectRecords(tableVO);
+		   // 组装页信息
+		   Page page = new Page();
+		   Integer current = tableVO.getCurrent();
+		   page.setCurrent(current);
+		   page.setPrePage(current - 1);
+		   page.setNextPage(current + 1);
+		   page.setRows(records.size());
+		   //获取所有记录的数量
+		   Integer allRows = tableService.getRecordsCount(tableVO);
+		   //设置尾页页码
+		   page.setEnd(allRows);
+		   
+		   //组装recordSet
+		   recordSet.setPage(page);
 		   recordSet.setColumnsName(columnsName);
+		   recordSet.setPrimaryKeys(primaryKeys);
 		   recordSet.setRecords(records);
 		   return ScnuResult.build(recordSet);
 		}catch(Exception e) {
@@ -124,8 +155,14 @@ public class TableController {
 	    }
 		
 		try {
+		    // 若存在主键，则通过主键查找记录
+		    if(tableVO.getPrimaryKeys() != null) {
+				   generataPrimaryKeyMap(tableVO);
+			}
 			Map<String, Object> record = tableService.selectRecord(tableVO);
-			return ScnuResult.build(record);
+			Map<String, Map<String, Object>> map = new HashMap();
+			map.put("record", record);
+			return ScnuResult.build(map);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

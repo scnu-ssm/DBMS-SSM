@@ -21,8 +21,11 @@ public interface TableMapper {
 	   // 增加数据记录
 	   public int insertRecord(@Param("database") String database, @Param("table") String table, @Param("newRecord") Map<String, Object> newRecord);
 	   
-	   // 查询数据记录集
-	   public List<Map<String, Object>> selectRecords(@Param("database") String database, @Param("table") String table);
+	   // 查询分页数据记录集
+	   public List<Map<String, Object>> selectRecords(@Param("database") String database, @Param("table") String table, @Param("offset") Integer offset, @Param("orderColumn") String orderColumn, @Param("orderType") String orderType);
+	   
+	   // 查询所有数据记录集的数量
+	   public Integer selectAllRecords(@Param("database") String database, @Param("table") String table);
 	   
 	   // 查询单条数据记录
 	   public Map<String, Object> selectRecord(@Param("database") String database, @Param("table") String table, @Param("oldRecord") Map<String, Object> oldRecord);

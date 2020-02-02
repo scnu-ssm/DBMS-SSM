@@ -4,27 +4,27 @@
         
      <delete id="deleteRecord">
            delete from ${database}.${table} where 
-           <foreach collection="oldRecord" separator="and" index="key" item="value">
-                #{key} = #{value}
+           <foreach collection="oldRecord.keys" separator="and" item="key">
+                ${key} = #{oldRecord[${key}]}
            </foreach>
            limit 1
      </delete>
      
      <update id="updateRecord">
            update ${database}.${table} set
-           <foreach collection="newRecord" separator="and" index="key" item="value">
-                 #{key} = #{value}
+           <foreach collection="newRecord.keys" separator="," item="key">
+                 ${key} = #{newRecord[${key}]}
            </foreach>
            where
-           <foreach collection="oldRecord" separator="and" index="key" item="value">
-                 #{key} = #{value}
+           <foreach collection="oldRecord.keys" separator="and" item="key">
+                 ${key} = #{oldRecord[${key}]}
            </foreach>
      </update>
      
      <insert id="insertRecord">
            insert into ${database}.${table} 
            <foreach collection="newRecord" separator="," index="key" open="(" close=")">
-                  #{key}
+                  ${key}
            </foreach>
            values
            <foreach collection="newRecord" separator="," item="value" open="(" close=")">
@@ -33,13 +33,21 @@
      </insert>
      
      <select id="selectRecords" resultType="java.util.LinkedHashMap">
-           select * from ${database}.${table}
+           select * from ${database}.${table} 
+           <if test="orderColumn != null">
+               order by ${orderColumn} ${orderType}
+           </if>
+           limit ${offset}, 500
+     </select>
+     
+     <select id="selectAllRecords" resultType="int">
+           select count(*) from ${database}.${table} 
      </select>
      
      <select id="selectRecord" resultType="java.util.LinkedHashMap">
            select * from ${database}.${table} where
-           <foreach collection="oldRecord" separator="and" index="key" item="value">
-                   #{key} = #{value}
+           <foreach collection="oldRecord.keys" separator="and" item="key">
+                   ${key} = #{oldRecord[${key}]}
            </foreach>
      </select>
      

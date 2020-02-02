@@ -7,6 +7,7 @@ import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.chenrong.bean.Const;
 import com.chenrong.bean.TableVO;
 import com.scnu.dao.TableMapper;
 import com.scnu.util.ConnectManager;
@@ -72,7 +73,23 @@ public class TableService {
 		SqlSession sqlSession = connectManager.getSessionAutoCommitByConnectId(tableVO.getConnectId());
 		try {
 		    TableMapper tableMapper = sqlSession.getMapper(TableMapper.class);
-		    return tableMapper.selectRecords(tableVO.getDatabase(), tableVO.getTable());
+		    return tableMapper.selectRecords(tableVO.getDatabase(), tableVO.getTable(), (tableVO.getCurrent() - 1)*Const.SPAN, tableVO.getOrderColumn(), tableVO.getOrderType());
+		}finally {
+			// 释放Session
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+
+	}
+	
+	// 查询数据记录集的数量
+	public Integer getRecordsCount(TableVO tableVO) throws Exception{
+		
+		SqlSession sqlSession = connectManager.getSessionAutoCommitByConnectId(tableVO.getConnectId());
+		try {
+		    TableMapper tableMapper = sqlSession.getMapper(TableMapper.class);
+		    return tableMapper.selectAllRecords(tableVO.getDatabase(), tableVO.getTable());
 		}finally {
 			// 释放Session
 			if(sqlSession != null) {

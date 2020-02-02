@@ -10,11 +10,21 @@ import java.util.Map;
  */
 public class RecordSet {
 	
+	private Page page;  // 页信息
+	
 	private List<String> primaryKeys;  // 主键集合
 	
 	private List<String> columnsName;  // 列名字
 	
 	private List<Map<String, Object>> records;  // 记录集
+
+	public Page getPage() {
+		return page;
+	}
+
+	public void setPage(Page page) {
+		this.page = page;
+	}
 
 	public List<String> getPrimaryKeys() {
 		return primaryKeys;
@@ -42,7 +52,8 @@ public class RecordSet {
 
 	@Override
 	public String toString() {
-		return "RecordSet [primaryKeys=" + primaryKeys + ", columnsName=" + columnsName + ", records=" + records + "]";
+		return "RecordSet [page=" + page + ", primaryKeys=" + primaryKeys + ", columnsName=" + columnsName
+				+ ", records=" + records + "]";
 	}
-
+	
 }

@@ -21,6 +21,36 @@ public class TableVO {
 	private Map<String, Object> newRecord;  // 单条新记录的内容， key代表字段名称， value对应字段的值
 	
 	private Map<String, Object> oldRecord;  // 单条旧记录的内容， key代表字段名称， value对应字段的值
+	
+	private Integer current; // 当前的页码
+	
+	private String orderColumn;  // 排序的字段
+	
+	private String orderType;  // 排序的方式
+
+	public Integer getCurrent() {
+		return current;
+	}
+
+	public void setCurrent(Integer current) {
+		this.current = current;
+	}
+
+	public String getOrderColumn() {
+		return orderColumn;
+	}
+
+	public void setOrderColumn(String orderColumn) {
+		this.orderColumn = orderColumn;
+	}
+
+	public String getOrderType() {
+		return orderType;
+	}
+
+	public void setOrderType(String orderType) {
+		this.orderType = orderType;
+	}
 
 	public String getConnectId() {
 		return connectId;
@@ -73,7 +103,8 @@ public class TableVO {
 	@Override
 	public String toString() {
 		return "TableVO [connectId=" + connectId + ", database=" + database + ", table=" + table + ", primaryKeys="
-				+ primaryKeys + ", newRecord=" + newRecord + ", oldRecord=" + oldRecord + "]";
+				+ primaryKeys + ", newRecord=" + newRecord + ", oldRecord=" + oldRecord + ", current=" + current
+				+ ", orderColumn=" + orderColumn + ", orderType=" + orderType + "]";
 	}
 	
 }

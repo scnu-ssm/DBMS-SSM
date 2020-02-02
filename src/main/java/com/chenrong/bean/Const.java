@@ -69,5 +69,8 @@ public class Const {
 	
 	// 邮件服务常量
 	public static final String SUBJECT = "密码找回 - 验证码";
+	
+	// 页数据的跨度
+	public static final Integer SPAN = 500;
 
 }
