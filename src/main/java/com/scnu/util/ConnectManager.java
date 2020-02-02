@@ -16,9 +16,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConnectManager {
 	
-	// Key的过期时间, 20分钟
+	// 连接的过期时间, 20分钟
 	public final static Long expire = 20*60*1000L;
-	//public final static Long expire = 60*1000L;
 	
 	@Autowired
 	JDBCMyBatisUtil jDBCMyBatisUtil;

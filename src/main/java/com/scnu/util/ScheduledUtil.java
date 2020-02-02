@@ -30,7 +30,7 @@ public class ScheduledUtil {
 			if(System.currentTimeMillis() >= expiresPool.get(connectId)) {
 				connectManager.deleteConnect(connectId);
 				expiresPool.remove(connectId);
-				System.out.println("连接超时，已经被自动删除， connectId = " + connectId);
+				System.out.println("连接超时，已经被自动关闭， connectId = " + connectId);
 			}
 		}
 		

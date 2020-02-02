@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.scnu.dao.DemoMapper">
 
-   <resultMap id="BaseResultMap" type="com.chenrong.bean.Demo">
+  <resultMap id="BaseResultMap" type="com.chenrong.bean.Demo">
     <result column="id" jdbcType="VARCHAR" property="id" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="password" jdbcType="VARCHAR" property="password" />
@@ -16,11 +16,10 @@
     values (#{id,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR})
   </insert>
   
-   <select id="selectById" parameterType="string" resultMap="BaseResultMap">
+   <select id="selectById" parameterType="String" resultType="java.util.LinkedHashMap" >
     select 
     <include refid="Base_Column_List" />
-    from #{database, jdbcType=VARCHAR}.demo
-    where id = #{id,jdbcType=VARCHAR}
+    from ${database}.demo where id = #{id}
   </select>
 
 </mapper>

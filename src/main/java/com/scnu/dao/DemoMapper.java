@@ -1,8 +1,9 @@
 package com.scnu.dao;
 
-import org.apache.ibatis.annotations.Param;
+import java.util.List;
+import java.util.Map;
 
-import com.chenrong.bean.Demo;
+import org.apache.ibatis.annotations.Param;
 
 public interface DemoMapper {
 	
@@ -10,6 +11,6 @@ public interface DemoMapper {
 	int insert(@Param("database") String database, @Param("id") String id, @Param("username") String username, @Param("password") String password);
 	
 	// ²éÑ¯Êý¾Ý
-	Demo selectById(@Param("database") String database, @Param("id") String id);
+	List<Map> selectById(@Param("database") String database, @Param("id") String id);
 
 }
