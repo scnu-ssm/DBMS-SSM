@@ -123,5 +123,20 @@ public class ConnectInfoController {
 		}
 		return ScnuResult.build(list);
 	}
+	
+	// 关闭连接
+	@RequestMapping(value = "/close", method = RequestMethod.POST)
+	@ResponseBody
+	public ScnuResult closeConnect(String connectId) {
+		
+		   String connectName = connectInfoService.closeConnect(connectId);
+		   
+		   if(connectName == null) {
+			    return ScnuResult.forbidden("连接不存在");
+		   }else {
+			    return ScnuResult.build("连接 ' " + connectName + "' 已经被关闭!");
+		   }
+	
+	}
 
 }

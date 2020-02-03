@@ -8,12 +8,16 @@ import org.springframework.util.StringUtils;
 
 import com.chenrong.bean.ConnectInfo;
 import com.chenrong.dao.ConnectInfoMapper;
+import com.scnu.util.ConnectManager;
 
 @Service
 public class ConnectInfoService {
 	
 	@Autowired
 	ConnectInfoMapper connectInfoMapper;
+	
+	@Autowired
+	ConnectManager connectManager;
 	
 	// 新建连接
 	public boolean insert(ConnectInfo connectInfo) {
@@ -69,6 +73,13 @@ public class ConnectInfoService {
 	// 根据userId查询连接
 	public List<ConnectInfo> selectConnectByUserId(String userId) {
 		   return connectInfoMapper.selectByUserId(userId);
+	}
+	
+	// 根据connectId关闭连接,返回连接名字
+	public String closeConnect(String connectId) {
+		connectManager.deleteConnect(connectId);
+		ConnectInfo connectInfo = selectByConnectId(connectId);
+		return connectInfo == null ? null : connectInfo.getConnectName();
 	}
 
 }

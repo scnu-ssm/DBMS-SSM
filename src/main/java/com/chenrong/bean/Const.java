@@ -57,6 +57,7 @@ public class Const {
 	
 	// Cookie的domain、path
 	public static final String cookieDomain = "localhost";  // Cookie的域
+	//public static final String cookieDomain = "www.chenrong.xyz";  // Cookie的域
 	
 	public static final String cookiePath = "/";  // Cookie的路径
 	
