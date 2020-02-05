@@ -40,7 +40,8 @@ public class ConnectInfoController {
 		
 		// 新建连接信息成功
 		if(taf) {
-		   return ScnuResult.connectInfoInsertSuccess();
+		   connectInfo.setUserId(null);
+		   return ScnuResult.build(connectInfo);
 		}
 		// 新建连接失败
 		return ScnuResult.connectInfoInsertFailure();

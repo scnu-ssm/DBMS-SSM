@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.scnu.dao.DataBaseMapper"> 
+  
+  <select id="selectCharsets" resultType="String" >
+        select CHARACTER_SET_NAME from information_schema.CHARACTER_SETS order by CHARACTER_SET_NAME
+  </select>
+  
+   <select id="selectCollations" parameterType="String" resultType="String">
+        select COLLATION_NAME from information_schema.collations where CHARACTER_SET_NAME = #{characterSet} order by COLLATION_NAME
+  </select>
+
+</mapper>

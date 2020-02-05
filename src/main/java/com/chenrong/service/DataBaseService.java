@@ -1,22 +1,18 @@
 package com.chenrong.service;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.chenrong.bean.ConnectVO;
 import com.chenrong.bean.DataBaseProperty;
+import com.scnu.dao.DataBaseMapper;
 import com.scnu.util.ConnectManager;
 
 @Service
@@ -154,6 +150,40 @@ public class DataBaseService {
 		sqlsession.close();
     	return taf;
     	
+    }
+    
+    /**
+     * 获取数据库的字符集
+     * @param connectId 连接Id
+     * @return
+     * @throws Exception
+     */
+    public List<String> getCharacterSets(String connectId) throws Exception {
+    	SqlSession sqlsession = connectManager.getSessionAutoCommitByConnectId(connectId);
+    	try {
+    	     DataBaseMapper dataBaseMapper = sqlsession.getMapper(DataBaseMapper.class);
+    	     List<String> characterSets = dataBaseMapper.selectCharsets();
+    	     return characterSets;
+    	} finally {
+    		sqlsession.close();
+    	}
+    }
+    
+    /**
+     * 根据字符集，获取数据库的排序集
+     * @param connectId
+     * @param characterSet
+     * @return
+     */
+    public List<String> getCollations(String connectId, String characterSet) throws Exception{
+    	SqlSession sqlsession = connectManager.getSessionAutoCommitByConnectId(connectId);
+    	try {
+    		DataBaseMapper dataBaseMapper = sqlsession.getMapper(DataBaseMapper.class);
+    		List<String> collations = dataBaseMapper.selectCollations(characterSet);
+    		return collations;
+    	} finally {
+    		sqlsession.close();
+    	}
     }
     
 }
