@@ -1,5 +1,590 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="static/bootstrp/css/bootstrap.css">
+  <script src="static/js/vendor/jquery-3.4.1.min.js"></script>
+  <script src="static/bootstrp/js/bootstrap.js"></script>
+  <script src="static/js/index.js"></script>
+  <title>EasyDB</title>
+</head>
+
+<style type="text/css">
+  .modal.fade.in {
+    top: 90px;
+  }
+</style>
+
 <body>
-<h2>��ӭʹ�� SCNU-DBMS </h2>
+<div class="container">
+  <!-- container start-->
+
+  <!-- header -->
+  <div class="row">
+    <div class="pull-left">
+      <label id="welcomeText">欢迎使用EasyDB!</label>
+      &nbsp;&nbsp;
+      <button id="btnLogout" type="button" class="btn btn-info btn-sm" style="display: none" data-toggle="modal" data-target="#logoutModal">
+        <span>退出登陆</span>
+      </button>
+    </div>
+    <div class="pull-right">
+      <button id="btnLogin" type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#loginModal">
+        <span>登录</span>
+      </button>
+      &nbsp;&nbsp;
+      <button id="btnRegister" type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#registerModal">
+        <span>注册</span>
+      </button>
+      <div class="btn-group">
+        <button id="btnUserManage" type="button" class="btn btn-info dropdown-toggle btn-sm" data-toggle="dropdown" style="display: none">更多
+          <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu">
+          <li>
+            <a id="pensonalCenter" href="#userModal" data-toggle="modal">个人中心</a>
+          </li>
+          <li>
+            <a href="#aboutUsModal" data-toggle="modal">关于我们</a>
+          </li>
+          <li>
+            <a href="#feedBackModal" data-toggle="modal">反馈</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- header end -->
+
+  <!-- 导航 start -->
+  <nav class="navbar navbar-default" role="navigation">
+    <!-- 导航居中样式-->
+    <style>
+      .navbar-default .navbar-nav {
+        text-align: center;
+        float: none;
+      }
+
+      .navbar-default .navbar-nav li {
+        display: inline-block;
+        float: none;
+      }
+    </style>
+    <!-- 导航栏内容 -->
+    <div class="container-fluid">
+      <div class="nav navbar-nav">
+        <li><a href="#newConnectModal" data-toggle="modal"><span class="glyphicon glyphicon-link"></span>新建连接</a></li>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            <span class="glyphicon glyphicon-user"></span>用户<b class="caret"></b>
+          </a>
+          <ul class="dropdown-menu" id="DBuserUl">
+<!--            <li>-->
+<!--              <a href="DBuser/DBuserList.html" class="toDBuser">-->
+<!--                xzcLink-->
+<!--              </a>-->
+<!--              <input type="text" hidden="hidden" value="connectId">-->
+<!--            </li>-->
+          </ul>
+        </li>
+        <li><a href="backup/backup.html" target="_blank"><span class="glyphicon glyphicon-refresh"></span> 备份</a></li>
+        <li><a href="backup/transfer.html" target="_blank"><span class="glyphicon glyphicon-share"></span> 传输</a></li>
+      </div>
+    </div>
+  </nav>
+  <!-- 导航 end -->
+
+  <!-- 展示所有连接 -->
+  <div class="panel-group" id="accordion">
+    <!--  连接1 start-->
+    <!--    <div class="panel panel-info">
+    &lt;!&ndash; 面板header &ndash;&gt;
+    <div class="panel-heading" data-connectId="">
+      <h4 class="panel-title">
+        wtxLink
+      </h4>
+      <p>
+        <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#newDatabaseModal">
+          <span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;新建数据库
+        </button>
+        <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#updateConnectModal">
+          <span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp;编辑连接
+        </button>
+        <button type="button" class="btn btn-default btn-xs" data-toggle="modal" data-target="#deleteConnectModal">
+          <span class="glyphicon glyphicon-minus"></span>&nbsp;&nbsp;删除连接
+        </button>
+        &lt;!&ndash; 定义折叠，关联collapse_1折叠内容 &ndash;&gt;
+        <button type="button" class="btn btn-default btn-xs" data-toggle="collapse" data-parent="#accordion"
+                href="#collapse_1">
+          <span id="openAndClose" class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp;展开
+        </button>
+      </p>
+      &lt;!&ndash; 后期完善body &ndash;&gt;
+      &lt;!&ndash; 面板body作为折叠内容 id命名折叠提供关联引用 &ndash;&gt;
+      <div id="collapse_1" class="panel-collapse collapse">
+        <div class="panel-body">
+          <ul class="list-group">
+            <li class="list-group-item">database1
+              <button type="button" class="btn btn-info btn-xs pull-right">
+                <span class="glyphicon glyphicon-th-large">&nbsp;打开</span>
+              </button>
+              <a class="pull-right">&nbsp;&nbsp;</a>
+              <button type="button" class="btn btn-info btn-xs pull-right" data-toggle="modal" data-target="#deleteDatabaseModal">
+                <span class="glyphicon glyphicon-minus">&nbsp;删除数据库</span>
+              </button>
+              <a class="pull-right">&nbsp;&nbsp;</a>
+              <button type="button" class="btn btn-info btn-xs pull-right" data-toggle="modal"
+                      data-target="#updateDatabaseModal">
+                <span class="glyphicon glyphicon-pencil">&nbsp;编辑数据库</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>-->
+    <!-- 连接 1 end -->
+
+  </div>
+  <!-- 展示所有连接 end-->
+
+  <!--container end-->
+</div>
+
+<!-- 登录模态框 start-->
+<div class="modal fade" id="loginModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body" style="text-align: center">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <br>
+        <h4 class="modal-title"><b>登录</b></h4>
+        <br>
+        <div>
+          <input id="uname" type="text" class="form-control" placeholder="用户名">
+        </div>
+        <br>
+        <div>
+          <input id="upwd" type="password" class="form-control" placeholder="密码">
+        </div>
+        <br><br>
+        <button id="btLogin" type="button" class="btn btn-info btn-block">登录</button>
+        <br>
+        <div style="text-align: center">
+          <a href="#registerModal" data-toggle="modal">注册新用户</a>
+          <a>&nbsp;&nbsp;</a>
+          <a href="#forgetPasswordModal" data-toggle="modal">忘记密码</a>
+        </div>
+        <br><br>
+      </div>
+    </div>
+    e
+  </div>
+</div>
+<!-- 登录模态框 end -->
+
+<!-- 注册模态框 start-->
+<div class="modal fade" id="registerModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body" style="text-align: center">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <br>
+        <h4 class="modal-title"><b>注册</b></h4>
+        <br>
+        <div>
+          <input id="registerUname" type="text" class="form-control" placeholder="用户名">
+        </div>
+        <br>
+        <div>
+          <input id="registerPwd" type="password" class="form-control" placeholder="密码">
+        </div>
+        <br>
+        <div>
+          <input id="registerPwd1" type="password" class="form-control" placeholder="再次输入密码">
+        </div>
+        <br>
+        <div>
+          <input id="email" type="text" class="form-control" placeholder="邮箱">
+        </div>
+        <br><br>
+        <button id="btRegister" type="button" class="btn btn-info btn-block">注册</button>
+        <br><br>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 注册模态框 end-->
+
+<!-- 忘记密码模态框 start -->
+<div class="modal fade" id="forgetPasswordModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body" style="text-align: center">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <br>
+        <h4 class="modal-title"><b>忘记密码</b></h4>
+        <br>
+        <div>
+          <input id="verUserName" type="text" class="form-control" placeholder="用户名">
+        </div>
+        <br>
+        <div>
+          <input id="restPassword" type="password" class="form-control" placeholder="新密码">
+        </div>
+        <br>
+        <div>
+          <input id="restPassword1" type="password" class="form-control" placeholder="再次输入密码">
+        </div>
+        <br>
+        <div class="input-group">
+          <input id="code" type="text" class="form-control" placeholder="验证码">
+          <div class="input-group-btn">
+            <button id="verification" type="button" class="btn btn-info btn-block">发送验证码至邮箱</button>
+          </div>
+        </div>
+        <br><br>
+        <button id="updatePasswordByCode" type="button" class="btn btn-info btn-block">提交</button>
+        <br><br>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 忘记密码 end -->
+
+<!-- 新建连接模态框 start-->
+<div class="modal fade" id="newConnectModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body" style="text-align: center">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <br>
+        <h4 class="modal-title"><b>新建连接</b></h4>
+        <br>
+        <div>
+          <input type="text" id="connectName" class="form-control" placeholder="连接名">
+        </div>
+        <br>
+        <div>
+          <input type="text" id="connectIP" class="form-control" placeholder="ip地址">
+        </div>
+        <br>
+        <div>
+          <input type="text" id="connectPort" class="form-control" placeholder="端口号">
+        </div>
+        <br>
+        <div>
+          <input type="text" id="connectUsername" class="form-control" placeholder="用户名">
+        </div>
+        <br>
+        <div>
+          <input type="password" id="connectPassword" class="form-control" placeholder="密码">
+        </div>
+        <br>
+        <div>
+          <input type="password" id="connectRepeatPassword" class="form-control" placeholder="再次输入密码">
+        </div>
+        <br><br>
+        <button type="button" id="connectSave" class="btn btn-info btn-block">保存</button>
+        <br><br>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 新建连接模态框 end-->
+
+<!-- 新建数据库模态框 start-->
+<div class="modal fade" id="newDatabaseModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body" style="text-align: center">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <input type="hidden" id="createDatabase" value="">
+        <br>
+        <h4 class="modal-title"><b>新建数据库</b></h4>
+        <br>
+        <div>
+          <input id="databaseName" type="text" class="form-control" placeholder="数据库名称">
+        </div>
+        <br>
+        <div class="input-group">
+          <input id="characterSet" type="text" class="form-control" value="" placeholder="字符集 例如：utf8">
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              <span class="caret"></span>
+            </button>
+            <ul id="character" class="dropdown-menu pull-right" style="overflow-y:auto; height: 160px">
+              <!--              <li><a></a></li>-->
+            </ul>
+          </div>
+        </div>
+        <br>
+        <div class="input-group">
+          <input id="sortRuleSet" type="text" class="form-control" value="" placeholder="排序规则 例如：utf8_general_ci">
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              <span class="caret"></span>
+            </button>
+            <ul id="sortRule" class="dropdown-menu pull-right" style="overflow-y:auto; height: 160px">
+              <!--              <li><a></a></li>-->
+            </ul>
+          </div>
+        </div>
+        <br><br>
+        <button type="button" class="btn btn-info btn-block" id="createDatabaseSave">保存</button>
+        <br><br>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 新建连接模态框 end-->
+
+<!-- 编辑连接模态框 start-->
+<div class="modal fade" id="updateConnectModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body" style="text-align: center">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <input type="hidden" id="updateInput" value="">
+        <br>
+        <h4 class="modal-title"><b>编辑连接</b></h4>
+        <br>
+        <div class="input-group">
+          <span class="input-group-addon">连接名字</span>
+          <input type="text" class="form-control" id="updateConnectName">
+        </div>
+        <br>
+        <div class="input-group">
+          <span class="input-group-addon">ip地址&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <input type="text" class="form-control" id="updateConnectIP">
+        </div>
+        <br>
+        <div class="input-group">
+          <span class="input-group-addon">端口&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <input type="text" class="form-control" id="updateConnectPort">
+        </div>
+        <br>
+        <div class="input-group">
+          <span class="input-group-addon">用户名&ensp;&nbsp;&nbsp;</span>
+          <input type="text" class="form-control" id="updateConnectUsername">
+        </div>
+        <br>
+        <div class="input-group">
+          <span class="input-group-addon">密码&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <input type="password" class="form-control" id="updateConnectPassword">
+        </div>
+        <br><br>
+        <button type="button" id="updateSave" class="btn btn-info btn-block">保存</button>
+        <br><br>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 编辑连接模态框 end-->
+
+<!-- 编辑数据库模态框 start-->
+<div class="modal fade" id="updateDatabaseModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body" style="text-align: center">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <input id="update-database-input" type="hidden" value="">
+        <br>
+        <h4 class="modal-title"><b>编辑数据库</b></h4>
+        <br>
+        <div class="input-group">
+          <span class="input-group-addon">数据库名</span>
+          <input id="update-database-name" type="text" class="form-control">
+        </div>
+        <br>
+        <div class="input-group">
+          <span class="input-group-addon">字符集&nbsp;&nbsp;&ensp;</span>
+          <input id="update-database-character" type="text" class="form-control" value="">
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              <span class="caret"></span>
+            </button>
+            <ul id="character-update" class="dropdown-menu pull-right" style="overflow-y:auto; height: 160px">
+<!--              <li value="utf-8"><a>utf-8</a></li>
+              <li value="gbk"><a>gbk</a></li>-->
+            </ul>
+          </div>
+        </div>
+        <br>
+        <div class="input-group">
+          <span class="input-group-addon">排序规则</span>
+          <input id="update-database-sortRule" type="text" class="form-control" value="">
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+              <span class="caret"></span>
+            </button>
+            <ul id="sortRule-update" class="dropdown-menu pull-right" style="overflow-y:auto; height: 160px">
+<!--              <li><a>utf8_general_ci</a></li>
+              <li><a>utf8_bin</a></li>-->
+            </ul>
+          </div>
+        </div>
+        <br><br>
+        <button id="update-database-save" type="button" class="btn btn-info btn-block">保存</button>
+        <br><br>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 编辑数据库模态框 end-->
+
+<!-- 删除连接模态框 start-->
+<div class="modal fade" id="deleteConnectModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body" style="text-align: center">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <input type="hidden" id="hideInput" value="">
+        <br>
+        <h4 class="modal-title"><b>删除连接</b></h4>
+        <br>
+        <label>删除连接需慎重，确定删除吗？</label>
+        <br><br>
+        <button  type="button" id="deleteConnect" class="btn btn-danger btn-block">确定</button>
+        <br><br>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 删除连接模态框 end-->
+
+<!-- 删除数据库不用模态框 -->
+<!-- 删除数据库模态框 start-->
+<!--<div class="modal fade" id="deleteDatabaseModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body" style="text-align: center">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <br>
+        <h4 class="modal-title"><b>删除数据库</b></h4>
+        <br>
+        <label>删除数据库需慎重，确定删除吗？</label>
+        <br><br>
+        <button  type="button" class="btn btn-danger btn-block">确定</button>
+        <br><br>
+      </div>
+    </div>
+  </div>
+</div>-->
+<!-- 删除数据库模态框 end-->
+
+<!-- 确认退出模态框 start-->
+<div class="modal fade" id="logoutModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body" style="text-align: center">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <br>
+        <h4 class="modal-title"><b>注销用户</b></h4>
+        <br>
+        <label>确认退出登录吗？</label>
+        <br><br>
+        <button id="btnLogoutConfirm" type="button" class="btn btn-warning btn-block">确定</button>
+        <br><br>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 确认退出模态框 end-->
+
+<!-- 个人中心模态框 start -->
+<div class="modal fade" id="userModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body" style="text-align: center">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <br>
+        <h4 class="modal-title"><b>个人中心</b></h4>
+        <br>
+        <div class="input-group">
+          <span class="input-group-addon">用户名&nbsp;&nbsp;&nbsp;</span>
+          <input id="userName" type="text" class="form-control" style="text-align: center" readonly>
+        </div>
+        <br>
+        <div class="input-group">
+          <span class="input-group-addon">email&ensp;&ensp;&nbsp;&nbsp;</span>
+          <input id="uesrEmail" type="text" class="form-control"style="text-align: center" readonly>
+        </div>
+        <br>
+        <div class="input-group">
+          <span class="input-group-addon">密码&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+          <button id="btnUpdatePassword" type="button" class="btn btn-default btn-block" data-toggle="modal" data-target="#updataPasswordModal" style="color: #2b669a">点击修改</button>
+        </div>
+        <br><br>
+        <button type="button" class="btn btn-info btn-block" data-dismiss="modal" aria-hidden="true">关闭</button>
+        <br><br>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 个人中心模态框 start -->
+
+<!-- 修改密码模态框 start-->
+<div class="modal fade" id="updataPasswordModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body" style="text-align: center">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <br>
+        <h4 class="modal-title"><b>修改密码</b></h4>
+        <br>
+        <div class="input-group">
+          <span class="input-group-addon">原密码&nbsp;&nbsp;&nbsp;</span>
+          <input id="oldPassword" type="password" class="form-control">
+        </div>
+        <br>
+        <div class="input-group">
+          <span class="input-group-addon">新密码&nbsp;&nbsp;&nbsp;</span>
+          <input id="newPassword" type="password" class="form-control">
+        </div>
+        <br><br>
+        <button id="updatePassword" type="button" class="btn btn-info btn-block">提交</button>
+        <br><br>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 修改密码模态框 end-->
+
+<!-- 关于我们模态框 start-->
+<div class="modal fade" id="aboutUsModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body" style="text-align: center">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <br>
+        <h4 class="modal-title"><b>关于我们</b></h4>
+        <br>
+        <label>一些关于我们的文本，后面改</label>
+        <br><br><br>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 关于我们模态框 end-->
+
+<!-- 反馈模态框 start-->
+<div class="modal fade" id="feedBackModal" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-body" style="text-align: center">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <br>
+        <h4 class="modal-title"><b>反馈</b></h4>
+        <br>
+        <label>对我们的任何疑问、建议都可以反馈到 xxx@xxx.com</label>
+        <br><br><br>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- 反馈模态框 end-->
+
 </body>
 </html>

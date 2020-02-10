@@ -55,6 +55,8 @@ public class Const {
 	
 	public static final String anonymousCookieKey = "Anonymous";
 	
+	public static final String JSESSIONID = "JSESSIONID";
+	
 	// Cookie的domain、path
 	public static final String cookieDomain = "localhost";  // Cookie的域
 	//public static final String cookieDomain = "www.chenrong.xyz";  // Cookie的域
@@ -67,6 +69,9 @@ public class Const {
 	public static final String VALIDATE_USERNAME = "validateUsername";
 	
 	public static final String VALIDATA_CODE = "validateCode";
+	
+	// Session的过期时间
+	public static final Integer expireTime = 30 * 60;
 	
 	// 邮件服务常量
 	public static final String SUBJECT = "密码找回 - 验证码";

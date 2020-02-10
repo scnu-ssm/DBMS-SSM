@@ -85,6 +85,7 @@ public class UserController {
 		if(taf) {
 		   // …Ë÷√Session Ù–‘
 		   HttpSession session = request.getSession();
+		   System.out.println("Session_ID = " + session.getId());
 		   User realUser = userService.getUserByUserName(user.getUsername());
 		   String userSessionID = GenerateIDUtil.getUUID32();
 		   session.setAttribute(userSessionID, realUser);

@@ -36,7 +36,13 @@ public class CorsFilter implements Filter {
     	
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        
+    	HttpSession session = request.getSession();
+    	// 所有的session都设置30分钟的过期时间
+    	session.setMaxInactiveInterval(Const.expireTime);
+    	String sessionId = session.getId();
+    	// 为会话设置可持久化的Cookie
+    	CookieUtil.setCookie(response, Const.JSESSIONID, sessionId, Const.expireTime);
+    	
         String userSessionID = CookieUtil.getCookieValue(request, Const.userCookieKey);
         String anonymousID = CookieUtil.getCookieValue(request, Const.anonymousCookieKey);
         
@@ -46,18 +52,22 @@ public class CorsFilter implements Filter {
         	CookieUtil.setCookie(response, Const.anonymousCookieKey, anonymousID, 10*365*24*60*60);
         }
         
-        HttpSession session = request.getSession();
+        System.out.println("sessionId = " + sessionId);
         // UserSessionID 不等于 UserId
         User user = (User)session.getAttribute(userSessionID);
         
+       	System.out.println("anonymousID = " + anonymousID);
         // 设置userID属性
         if(user == null) {
         	session.setAttribute(Const.USERID, anonymousID);
-        	System.out.println("anonymousID = " + anonymousID);
         }else {
         	session.setAttribute(Const.USERID, user.getId());
-        	System.out.println("UserId = " + user.getId());
+        	//更新Cookie的有效时间
+        	CookieUtil.setCookie(response, Const.userCookieKey, userSessionID);
+        	System.out.println("userId = " + user.getId());
         }
+        
+        System.out.println("\n\n");
         
         // 解决跨域请求
  
