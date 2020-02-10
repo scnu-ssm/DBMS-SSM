@@ -9,5 +9,7 @@
    <select id="selectCollations" parameterType="String" resultType="String">
         select COLLATION_NAME from information_schema.collations where CHARACTER_SET_NAME = #{characterSet} order by COLLATION_NAME
   </select>
+  
+  <select id="getVersion" resultType="String">select version()</select>
 
 </mapper>

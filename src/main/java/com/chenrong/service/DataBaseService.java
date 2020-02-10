@@ -186,4 +186,21 @@ public class DataBaseService {
     	}
     }
     
+    /**
+     *    查询数据库的版本
+     * @param connectId 连接Id
+     * @return
+     * @throws Exception
+     */
+    public String getVersion(String connectId) throws Exception{
+    	SqlSession sqlsession = connectManager.getSessionAutoCommitByConnectId(connectId);
+    	try {
+    		DataBaseMapper dataBaseMapper = sqlsession.getMapper(DataBaseMapper.class);
+    		String version = dataBaseMapper.getVersion();
+    		return version;
+    	} finally {
+    		sqlsession.close();
+    	}
+    }
+    
 }

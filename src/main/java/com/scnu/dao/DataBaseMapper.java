@@ -12,6 +12,9 @@ public interface DataBaseMapper {
 	// 查询数据库的排序规则
     public List<String> selectCollations(@Param("characterSet") String characterSet);
     
+    // 查询数据库的版本
+    public String getVersion();
+    
     
     
 }

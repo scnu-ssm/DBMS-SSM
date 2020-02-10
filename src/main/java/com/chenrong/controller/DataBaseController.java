@@ -172,4 +172,26 @@ public class DataBaseController {
        	   
     }
     
+    // 查询数据库的版本
+    @RequestMapping("/getVersion")
+    @ResponseBody
+    public ScnuResult getVersion(String connectId) {
+    	
+ 	   if(connectId == null) {
+		     return ScnuResult.forbidden("参数缺失");
+	   }
+ 	   try {
+	        String version = dataBaseService.getVersion(connectId);
+	        if(version.indexOf("-") == -1) {
+	        	return ScnuResult.build(version);
+	        }else {
+	            return ScnuResult.build(version.substring(0, version.indexOf("-")));
+	        }
+	   }catch(Exception e) {
+		   e.printStackTrace();
+		   return ScnuResult.forbidden("服务器异常，查询失败");
+	   }
+ 	   
+    }
+    
 }
