@@ -569,7 +569,7 @@ $(document).ready(function () {
                          console.log("新建数据库成功");
                          var collapse =
                         "<li class='list-group-item' connectId='" + connectId + "'><span>" + databaseName + "</span>" +
-                        "<button type='button' class='btn btn-info btn-xs pull-right'>" +
+                        "<button type='button' class='btn btn-info btn-xs pull-right' name='openDB'>" +
                         "<span class='glyphicon glyphicon-th-large'>&nbsp;打开</span>" +
                         "</button>" +
                         "<a class='pull-right'>&nbsp;&nbsp;</a>" +
@@ -687,7 +687,7 @@ $(document).ready(function () {
                       $(arr).each(function (index, item) {
                         var collapse =
                         "<li class='list-group-item' connectId='" + connectId + "'><span>" + item + "</span>" +
-                        "<button type='button' class='btn btn-info btn-xs pull-right'>" +
+                        "<button type='button' class='btn btn-info btn-xs pull-right' name='openDB'>" +
                         "<span class='glyphicon glyphicon-th-large'>&nbsp;打开</span>" +
                         "</button>" +
                         "<a class='pull-right'>&nbsp;&nbsp;</a>" +
@@ -886,29 +886,50 @@ $(document).ready(function () {
          var father = $(this).parent();
          var connectId = $(father).attr("connectId");
          var databaseName = $(father).children(":first").text();
-         $.ajax({
-             type: 'post',
-             async: true,
-             xhrFields: {withCredentials:true},
-             crossDomain: true,
-             url: basePath + "/database/deleteDateBase",
-             data: {"connectId":connectId, "databaseName":databaseName},
-             success: function (result) {
-                      if(result.code == 200){
-                          console.log("删除数据库成功");
-                          // 删除对应的li内容
-                          $(father).remove();
-                      }else{
-                          console.log("删除数据库失败");
-                      }
-             },
-             error: function () {
-                  console.log("删除数据库失败");
-             }
-         });
+         $("#delete-database-connectId").attr("value", connectId);
+         $("#delete-database-name").attr("value", databaseName);
+         // 按钮未被点击
+         $("#delete-database-confirm").attr("isClick", "false");
   });
 
-  // 关闭新建数据库模态框触发的事件
+  var jqObj;  // 全局变量，谨慎使用该变量，唯一识别打开模态框的事件
+  // 打开删除数据库模态框触发的事件
+  $("#deleteDatabaseModal").on('shown.bs.modal', function (event) {
+    jqObj = $(event.relatedTarget);
+  });
+
+  // 模态框   确认删除数据库按钮的监听事件
+  $("#delete-database-confirm").on("click", function () {
+         var connectId = $("#delete-database-connectId").attr("value");
+         var databaseName = $("#delete-database-name").attr("value");
+
+    $.ajax({
+      type: 'post',
+      async: true,
+      xhrFields: {withCredentials:true},
+      crossDomain: true,
+      url: basePath + "/database/deleteDateBase",
+      data: {"connectId":connectId, "databaseName":databaseName},
+      success: function (result) {
+        if(result.code == 200){
+          console.log("删除数据库成功");
+          // 模态框的按钮确认被点击
+          $("#delete-database-confirm").attr("isClick", "true");
+        }else{
+          console.log("删除数据库失败");
+        }
+      },
+      error: function () {
+        console.log("删除数据库失败");
+      }
+    });
+        // 删除对应的li
+        $(jqObj).parent().remove();
+        // 关闭模态框
+        $("#deleteDatabaseModal").modal('hide');
+  });
+
+  // 模态框   关闭新建数据库触发的事件
   $('#newDatabaseModal').on('hidden.bs.modal', function () {
         console.log("newDatabaseModal模态框关闭了");
         $("#databaseName").val("");
@@ -916,7 +937,7 @@ $(document).ready(function () {
         $("#sortRuleSet").val("");
   });
 
-  // 关闭编辑数据库模态框触发的事件
+  // 模态框   关闭编辑数据库触发的事件
   $("#updateDatabaseModal").on('hidden.bs.modal', function () {
         console.log("updateDatabaseModal模态框关闭了");
         $("#update-database-name").val("");
@@ -926,10 +947,23 @@ $(document).ready(function () {
 
 });
 
-//跳转到用户页面通过localStorage携带参数connectId
+//跳转到用户页面通过sessionStorage携带参数connectId
 $(document).on("click",".toDBuser",function () {
   let connectId = $(this).next().val()
   let connectName = $(this).next().next().val()
-  localStorage.setItem("connectName",connectName)
-  localStorage.setItem("connectId",connectId)
+  sessionStorage.setItem("DBconnectName",connectName)
+  sessionStorage.setItem("DBconnectId",connectId)
+})
+
+//点击连接列表打开按钮跳转到showDatabase.html
+$(document).on("click","button[name$='openDB']",function () {
+
+  let li = $(this).parent()
+  let connectId = li.attr("connectid")
+  let database = li.children(":first").text()
+  sessionStorage.setItem("connectId",connectId)
+  sessionStorage.setItem("database",database)
+  //TODO:发布前修改url
+  window.open("database/showDatabase.html","_blank")
+  // window.open("http://www.chenrong.xyz/database/showDatabase.html","_blank")
 })

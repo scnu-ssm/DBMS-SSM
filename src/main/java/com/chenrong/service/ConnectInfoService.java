@@ -53,9 +53,12 @@ public class ConnectInfoService {
 		if(connectInfo == null)
 		return false;
 		int num = connectInfoMapper.updateByPrimaryKeySelective(connectInfo);
-		// 更新成功
-		if(num >= 1)
-		return true;
+		// 更新成功，删除连接池原来的连接
+		if(num >= 1) {
+		   connectManager.deleteConnect(connectInfo.getConnectId());
+		   System.out.println("删除原来的连接成功!");
+		   return true;
+		}
 		// 更新失败
 		return false;
 	}

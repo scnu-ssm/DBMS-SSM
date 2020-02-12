@@ -70,7 +70,7 @@ public class Const {
 	
 	public static final String VALIDATA_CODE = "validateCode";
 	
-	// Session的过期时间
+	// Session的过期时间， 30分钟
 	public static final Integer expireTime = 30 * 60;
 	
 	// 邮件服务常量

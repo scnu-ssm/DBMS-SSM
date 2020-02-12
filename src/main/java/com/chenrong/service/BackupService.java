@@ -23,9 +23,9 @@ import org.apache.ibatis.jdbc.ScriptRunner;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.chenrong.bean.ConnectInfo;
-import com.chenrong.bean.ConnectVO;
 import com.chenrong.util.GenerateIDUtil;
 import com.scnu.util.ConnectManager;
 
@@ -37,6 +37,9 @@ public class BackupService {
 	public final static String TempPath = RootPath + File.separator + "SQL";
 	
 	public final static String suffix = ".sql";
+	
+	public final static String csvSuffix = ".csv";
+	
 	
 	@Autowired
 	ConnectManager connectManager;
@@ -82,7 +85,7 @@ public class BackupService {
 		return taf;
 	}
 	
-	// 还原SQL文件到指定数据库
+	// 指定SQL文件到指定数据库
 	public Integer Recovery(String connectId, String database, String src) throws Exception {
 		
 		// 不存在连接
@@ -111,14 +114,45 @@ public class BackupService {
 	 	return 1;
 	}
 	
-    // 将数据表的内容导出到csv文件中
-    public void leadingOutCSV(ConnectVO connectVO, String path) throws Exception{
-    	
-		SqlSession sqlsession = connectManager.getSessionAutoCommitByConnectId(connectVO.getConnectId());
+	// 重载，通过上传的文件到指定数据库
+	public Integer Recovery(String connectId, String database, MultipartFile sqlFile) throws Exception {
+		
+		// 不存在连接
+		if(connectInfoService.selectByConnectId(connectId) == null) {
+			     return -1;
+		}
+		
+		System.out.println("开始恢复...");
+		SqlSession sqlsession = connectManager.getSessionAutoCommitByConnectId(connectId);
 		Connection connect = sqlsession.getConnection();
 		Statement statement = connect.createStatement();
-		ResultSet res = statement.executeQuery("select * from " + connectVO.getDatabase() + "." + connectVO.getTable());
+		statement.executeQuery("use " + database);
+		
+		ScriptRunner runner = new ScriptRunner(connect);
+        runner.setLogWriter(null);//设置是否输出日志
+        // 绝对路径读取
+        Reader read = new BufferedReader(new InputStreamReader(sqlFile.getInputStream(), "UTF-8"));
+        runner.runScript(read);
+        runner.closeConnection();
+		statement.close();
+		connect.close();
+		sqlsession.close();
+        
+        System.out.println("恢复完成");
+        // 操作成功
+	 	return 1;
+	}
+	
+    // 将数据表的内容导出到csv文件中，并且返回文件的路径
+    public String leadingOutCSV(String connectId, String database, String table) throws Exception{
+    	
+		SqlSession sqlsession = connectManager.getSessionAutoCommitByConnectId(connectId);
+		Connection connect = sqlsession.getConnection();
+		Statement statement = connect.createStatement();
+		ResultSet res = statement.executeQuery("select * from " + database + "." + table);
 
+		// 生成临时csv文件名称
+		String path = TempPath + File.separator + GenerateIDUtil.getUUID32()  +csvSuffix;
 		// 导出数据表的数据到csv
 		CSVPrinter printer = null;
 		try {
@@ -133,37 +167,34 @@ public class BackupService {
 			}
 		}
  
+		return path;
     }
     
     // 将数据库指定的数据表导出到SQL文件中,返回生成的SQL文件路径
     public String BackupTable(String connectId, String database, String table, boolean isOnlyStructor) throws Exception{
-    	   File file = new File(TempPath);
-    	   // 如果不存在该路径就创建该文件
-    	   if(!file.exists()) {
-    		    file.mkdirs();
-    	   }
-    	   String fileName = GenerateIDUtil.getUUID32() + suffix;
-    	   // SQL文件的输出路径
-    	   String path = TempPath + File.separator + fileName;
     	   List<String> tables = new ArrayList();
     	   tables.add(table);
-    	   Backup(connectId, database, tables, path, isOnlyStructor);
+    	   String path = Backup(connectId, database, tables, isOnlyStructor);
     	   return path;
     }
     
     /**
-     * 将数据表列表备份到指定SQL文件，自己解析数据库内容生成SQL语句再写入SQL文件
+     * 
      * @param connectId 连接Id
      * @param database 数据库名称
      * @param tables 数据表名称列表
-     * @param dest 输出文件路径
+     * @param dest
      * @param isOnlyStructor 是否仅备份数据表结构
+     * @return  返回输出路径
      * @throws Exception
      */
-    public void Backup(String connectId, String database, List<String> tables, String dest, boolean isOnlyStructor) throws Exception{
+    public String Backup(String connectId, String database, List<String> tables, boolean isOnlyStructor) throws Exception{
     	   SqlSession sqlSession = connectManager.getSessionAutoCommitByConnectId(connectId);
-    	   // 获取文件
-    	   File file = generateFile(dest);
+    	   // 生成临时的SQL文件路径
+    	   String fileName = GenerateIDUtil.getUUID32() + suffix;
+    	   String path = TempPath + File.separator + fileName; 
+    	   // 创建SQL文件
+    	   File file = generateFile(path);
     	   FileOutputStream fos = new FileOutputStream(file);
     	   OutputStreamWriter osw = new OutputStreamWriter(fos, "UTF-8");
     	   BufferedWriter bw = new BufferedWriter(osw);
@@ -241,10 +272,13 @@ public class BackupService {
     	   bw.close();
     	   statement.close();
     	   con.close();
+    	   
+    	   // 返回生成SQL文件的路径
+    	   return path;
     }
     
     /**
-     * 创建文件
+     *  创建文件
      * @param dest 文件的路径，包含文件的名称
      * @return 返回文件对象
      */
