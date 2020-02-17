@@ -1,5 +1,7 @@
 package com.chenrong.bean;
 
+import java.util.List;
+
 /**
  *  页的信息
  * @author chenrong
@@ -19,7 +21,9 @@ public class Page {
 	 
 	 private Integer rows; // 当前页有多少条记录
 	 
-	 private Integer span = Const.SPAN;  // 一页存放的数据是 500 条记录
+	 private Integer allRows;  // 共有多少条记录
+	 
+	 private List<Integer> pageArr;   // 页码列表
 
 	public Integer getStart() {
 		return start;
@@ -35,10 +39,14 @@ public class Page {
 
 	// 传入的参数为 All数据记录数量
 	public void setEnd(Integer allRows) {
-		if(allRows % span == 0) {
-			this.end = allRows / span;
+		if(allRows % Const.SPAN == 0) {
+			this.end = allRows / Const.SPAN;
 		}else {
-		    this.end = allRows / span + 1;
+		    this.end = allRows / Const.SPAN + 1;
+		}
+		// end 不允许是 0
+		if(allRows == 0) {
+			this.end = 1;
 		}
 	}
 
@@ -47,7 +55,7 @@ public class Page {
 	}
 
 	public void setCurrent(Integer current) {
-		this.current = current;
+		this.current = current < 1 ? 1 : current;
 	}
 
 	public Integer getPrePage() {
@@ -63,7 +71,7 @@ public class Page {
 	}
 
 	public void setNextPage(Integer nextPage) {
-		this.nextPage = nextPage;
+		this.nextPage = nextPage > end ? end : nextPage;
 	}
 
 	public Integer getRows() {
@@ -72,6 +80,29 @@ public class Page {
 
 	public void setRows(Integer rows) {
 		this.rows = rows;
+	}
+
+	public Integer getAllRows() {
+		return allRows;
+	}
+
+	public void setAllRows(Integer allRows) {
+		this.allRows = allRows;
+	}
+
+	public List<Integer> getPageArr() {
+		return pageArr;
+	}
+
+	public void setPageArr(List<Integer> pageArr) {
+		this.pageArr = pageArr;
+	}
+
+	@Override
+	public String toString() {
+		return "Page [start=" + start + ", end=" + end + ", current=" + current + ", prePage=" + prePage + ", nextPage="
+				+ nextPage + ", rows=" + rows + ", allRows=" + allRows + ", pageArr=" + pageArr
+				+ "]";
 	}
 	 
 }

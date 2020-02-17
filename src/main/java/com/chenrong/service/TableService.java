@@ -18,13 +18,18 @@ public class TableService {
 	@Autowired
 	ConnectManager connectManager;
 	
-	// 将单条数据记录删除
+	// 将数据记录批量删除
 	public int deleteRecord(TableVO tableVO) throws Exception{
 		
 		SqlSession sqlSession = connectManager.getSessionAutoCommitByConnectId(tableVO.getConnectId());
 		try {
 		    TableMapper tableMapper = sqlSession.getMapper(TableMapper.class);
-		    return tableMapper.deleteRecord(tableVO.getDatabase(), tableVO.getTable(), tableVO.getOldRecord());
+		    Integer affectRow = 0;
+		    for(Map<String, Object> oldRecord : tableVO.getOldRecords()) {
+		    	affectRow +=tableMapper.deleteRecord(tableVO.getDatabase(), tableVO.getTable(), oldRecord);
+		    }
+		    return affectRow;
+		    
 		}finally {
 			// 释放Session
 			if(sqlSession != null) {
@@ -73,7 +78,7 @@ public class TableService {
 		SqlSession sqlSession = connectManager.getSessionAutoCommitByConnectId(tableVO.getConnectId());
 		try {
 		    TableMapper tableMapper = sqlSession.getMapper(TableMapper.class);
-		    return tableMapper.selectRecords(tableVO.getDatabase(), tableVO.getTable(), (tableVO.getCurrent() - 1)*Const.SPAN, tableVO.getOrderColumn(), tableVO.getOrderType());
+		    return tableMapper.selectRecords(tableVO.getDatabase(), tableVO.getTable(), (tableVO.getCurrent() - 1)*Const.SPAN, tableVO.getOrderColumn(), tableVO.getOrderType(), Const.SPAN);
 		}finally {
 			// 释放Session
 			if(sqlSession != null) {
@@ -100,13 +105,29 @@ public class TableService {
 	}
 	
 	
-	// 查询一个数据记录
-	public Map<String, Object> selectRecord(TableVO tableVO) throws Exception{
+	// 按照字段查询记录
+	public List<Map<String, Object>> selectRecordsByColumn(String connectId, String database, String table, String columnName, String value, Integer current) throws Exception{
 		
-		SqlSession sqlSession = connectManager.getSessionAutoCommitByConnectId(tableVO.getConnectId());
+		SqlSession sqlSession = connectManager.getSessionAutoCommitByConnectId(connectId);
 		try {
 		    TableMapper tableMapper = sqlSession.getMapper(TableMapper.class);
-		    return tableMapper.selectRecord(tableVO.getDatabase(), tableVO.getTable(), tableVO.getOldRecord());
+		    return tableMapper.selectRecordsByColumn(database, table, columnName, value, (current - 1)*Const.SPAN, Const.SPAN);
+		}finally {
+			// 释放Session
+			if(sqlSession != null) {
+				sqlSession.close();
+			}
+		}
+		
+	}
+	
+	// 按照字段查询记录总数
+	public Integer selectAllRecordsByColumn(String connectId, String database, String table, String columnName, String value) throws Exception{
+		
+		SqlSession sqlSession = connectManager.getSessionAutoCommitByConnectId(connectId);
+		try {
+		    TableMapper tableMapper = sqlSession.getMapper(TableMapper.class);
+		    return tableMapper.selectAllRecordsByColumn(database, table, columnName, value);
 		}finally {
 			// 释放Session
 			if(sqlSession != null) {

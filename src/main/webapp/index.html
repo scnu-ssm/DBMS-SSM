@@ -4,6 +4,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta charset="UTF-8">
   <link rel="stylesheet" href="static/bootstrp/css/bootstrap.css">
+  <link rel="stylesheet" href="static/css/index.css">
   <script src="static/js/vendor/jquery-3.4.1.min.js"></script>
   <script src="static/bootstrp/js/bootstrap.js"></script>
   <script src="static/js/index.js"></script>
@@ -76,7 +77,7 @@
       <div class="nav navbar-nav">
         <li><a href="#newConnectModal" data-toggle="modal"><span class="glyphicon glyphicon-link"></span>新建连接</a></li>
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="openDBuserUl">
             <span class="glyphicon glyphicon-user"></span>用户<b class="caret"></b>
           </a>
           <ul class="dropdown-menu" id="DBuserUl">
@@ -90,6 +91,7 @@
         </li>
         <li><a href="backup/backup.html" target="_blank"><span class="glyphicon glyphicon-refresh"></span> 备份</a></li>
         <li><a href="backup/transfer.html" target="_blank"><span class="glyphicon glyphicon-share"></span> 传输</a></li>
+        <li><a href="backup/recovery.html" target="_blank"><span class="glyphicon glyphicon-log-in"></span> 恢复</a></li>
       </div>
     </div>
   </nav>
@@ -263,7 +265,7 @@
         <h4 class="modal-title"><b>新建连接</b></h4>
         <br>
         <div>
-          <input type="text" id="connectName" class="form-control" placeholder="连接名">
+          <input type="text" id="connectName" class="form-control" placeholder="连接名" autocomplete="off">
         </div>
         <br>
         <div>
@@ -285,7 +287,12 @@
         <div>
           <input type="password" id="connectRepeatPassword" class="form-control" placeholder="再次输入密码">
         </div>
-        <br><br>
+        <div class="checkbox" style="text-align: right">
+          <label>
+            <input type="checkbox">保存密码
+          </label>
+        </div>
+        <br>
         <button type="button" id="connectSave" class="btn btn-info btn-block">保存</button>
         <br><br>
       </div>
@@ -374,7 +381,12 @@
           <span class="input-group-addon">密码&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
           <input type="password" class="form-control" id="updateConnectPassword">
         </div>
-        <br><br>
+        <div class="checkbox" style="text-align: right">
+          <label>
+            <input type="checkbox">保存密码
+          </label>
+        </div>
+        <br>
         <button type="button" id="updateSave" class="btn btn-info btn-block">保存</button>
         <br><br>
       </div>
@@ -587,5 +599,10 @@
 </div>
 <!-- 反馈模态框 end-->
 
+<!-- Copyright -->
+<div style="position: absolute; bottom: 0px; left: 45%">
+  <p style="text-align: center">Copyright © 2020 SCNU-EasyDB</p>
+  <p style="text-align: center"><a href="http://www.beian.miit.gov.cn" target="_blank" style="text-decoration: none; color: black">粤ICP备19002146号</a></p>
+</div>
 </body>
 </html>

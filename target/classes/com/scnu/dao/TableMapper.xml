@@ -37,18 +37,19 @@
            <if test="orderColumn != null">
                order by ${orderColumn} ${orderType}
            </if>
-           limit ${offset}, 500
+           limit ${offset}, ${span}
      </select>
      
      <select id="selectAllRecords" resultType="int">
            select count(*) from ${database}.${table} 
      </select>
      
-     <select id="selectRecord" resultType="java.util.LinkedHashMap">
-           select * from ${database}.${table} where
-           <foreach collection="oldRecord.keys" separator="and" item="key">
-                   ${key} = #{oldRecord[${key}]}
-           </foreach>
+     <select id="selectRecordsByColumn" resultType="java.util.LinkedHashMap">
+           select * from ${database}.${table} where ${columnName} = #{value} limit ${offset}, ${span}
+     </select>
+     
+     <select id="selectAllRecordsByColumn" resultType="int">
+           select count(*) from ${database}.${table} where ${columnName} = #{value}
      </select>
      
      

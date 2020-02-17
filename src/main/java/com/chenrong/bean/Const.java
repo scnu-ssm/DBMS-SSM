@@ -76,7 +76,9 @@ public class Const {
 	// 邮件服务常量
 	public static final String SUBJECT = "密码找回 - 验证码";
 	
-	// 页数据的跨度
-	public static final Integer SPAN = 500;
+	// 分页
+	public static final Integer SPAN = 100;   // 每一页的记录数
+	
+	public static final Integer pageNum = 7;   // 页码列表最多显示7个元素，不允许设置双数
 
 }

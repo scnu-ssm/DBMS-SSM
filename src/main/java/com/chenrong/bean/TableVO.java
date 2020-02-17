@@ -22,6 +22,8 @@ public class TableVO {
 	
 	private Map<String, Object> oldRecord;  // 单条旧记录的内容， key代表字段名称， value对应字段的值
 	
+	private List<Map<String, Object>> oldRecords;  //  多条旧记录的内容，每个Map代表一条记录
+	
 	private Integer current; // 当前的页码
 	
 	private String orderColumn;  // 排序的字段
@@ -100,11 +102,19 @@ public class TableVO {
 		this.primaryKeys = primaryKeys;
 	}
 
+	public List<Map<String, Object>> getOldRecords() {
+		return oldRecords;
+	}
+
+	public void setOldRecords(List<Map<String, Object>> oldRecords) {
+		this.oldRecords = oldRecords;
+	}
+
 	@Override
 	public String toString() {
 		return "TableVO [connectId=" + connectId + ", database=" + database + ", table=" + table + ", primaryKeys="
-				+ primaryKeys + ", newRecord=" + newRecord + ", oldRecord=" + oldRecord + ", current=" + current
-				+ ", orderColumn=" + orderColumn + ", orderType=" + orderType + "]";
+				+ primaryKeys + ", newRecord=" + newRecord + ", oldRecord=" + oldRecord + ", oldRecords=" + oldRecords
+				+ ", current=" + current + ", orderColumn=" + orderColumn + ", orderType=" + orderType + "]";
 	}
-	
+
 }

@@ -27,25 +27,6 @@ var basePath = protocol + host;
 
 //taixiong
 $(document).ready(function () {
-  //读取下拉菜单到input中
-  $("#character li").click(function () {
-    var x = $(this).text();
-    $("#characterSet").val(x);
-  });
-  $("#character1 li").click(function () {
-    var x = $(this).text();
-    $("#characterSet1").val(x);
-  });
-  $("#sortRule li").click(function () {
-    var y = $(this).text();
-    $("#sortRuleSet").val(y);
-  });
-  $("#sortRule1 li").click(function () {
-    var y = $(this).text();
-    $("#sortRuleSet1").val(y);
-  });
-
-
   //为登录按钮添加监听事件
   $("#btLogin").click(function () {
     //读取表单的数据
@@ -370,20 +351,6 @@ $(document).ready(function () {
             "</div>"
           $("#accordion").append(connect);
         }
-        //用户按钮下拉列表赋值
-        let usersHtml = ''
-        for(let j in arr){
-          usersHtml += `
-            <li>
-              <a href="DBuser/DBuserList.html" target="_blank" class="toDBuser">
-                ${arr[i].connectName}
-              </a>
-              <input type="text" hidden="hidden" value="${arr[i].connectId}">
-              <input type="text" hidden="hidden" value="${arr[i].connectName}">
-            </li>
-          `
-        }
-        $("#DBuserUl").html(usersHtml)
       }else{
           alert(result.data);
       }
@@ -966,4 +933,53 @@ $(document).on("click","button[name$='openDB']",function () {
   //TODO:发布前修改url
   window.open("database/showDatabase.html","_blank")
   // window.open("http://www.chenrong.xyz/database/showDatabase.html","_blank")
+})
+
+//点击导航用户事件，更新用户列表
+$(document).on("click","#openDBuserUl",function () {
+
+  $.ajax({
+    type: 'get',
+    async: false,
+    xhrFields: {
+      withCredentials: true
+    },
+    crossDomain: true,
+    url: basePath + "/connectInfo/selectByUserId",
+    success: function (result) {
+      if(result.code == 200) {
+        var arr = result.data;
+        //用户按钮下拉列表赋值
+        let usersHtml = ''
+        for(let i in arr){
+          usersHtml += `
+            <li>
+              <a href="DBuser/DBuserList.html" target="_blank" class="toDBuser">
+                ${arr[i].connectName}
+              </a>
+              <input type="text" hidden="hidden" value="${arr[i].connectId}">
+              <input type="text" hidden="hidden" value="${arr[i].connectName}">
+            </li>
+          `
+        }
+        $("#DBuserUl").html(usersHtml)
+      }else{
+        alert(result.data);
+      }
+    },
+    error: function () {
+      alert("请求查询连接接口失败");
+    }
+  });
+
+  // 在模态框出现后添加可拖拽功能
+  $(document).on("show.bs.modal", ".modal", function() {
+    // draggable 属性规定元素是否可拖动
+    $(this).draggable({
+      handle: ".modal-header", // 只能点击头部拖动
+      cursor: 'move' //光标呈现为指示链接的指针（一只手）,
+    });
+    $(this).css("overflow", "hidden"); // 防止出现滚动条，出现的话，你会把滚动条一起拖着走的
+  });
+
 })

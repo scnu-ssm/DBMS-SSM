@@ -12,17 +12,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.chenrong.bean.ScnuResult;
 import com.chenrong.service.BackupService;
@@ -86,15 +85,15 @@ public class BackupController {
 	// 还原控制器 上传SQL文件，并还原到指定数据库
 	@RequestMapping(value = "/recovery", method = RequestMethod.POST)
 	@ResponseBody
-	public ScnuResult Recovery(String conenctId, String database, @RequestParam("sqlFile") MultipartFile sqlFile) {
+	public ScnuResult Recovery(String connectId, String database, @RequestParam("sqlFile") MultipartFile sqlFile) {
 		
-		System.out.println("conenctId = " + conenctId);
+		System.out.println("conenctId = " + connectId);
 		System.out.println("database = " + database);
-		System.out.println("name = " + sqlFile.getName());
+		System.out.println("fileName = " + sqlFile.getName());
 		
 		Integer status = 0;
 		try {
-			status = backupService.Recovery(conenctId, database, sqlFile);
+			status = backupService.Recovery(connectId, database, sqlFile);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ScnuResult.forbidden("出现异常");
