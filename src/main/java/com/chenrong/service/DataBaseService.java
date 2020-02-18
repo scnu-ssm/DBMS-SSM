@@ -36,9 +36,21 @@ public class DataBaseService {
 		Connection connect = sqlsession.getConnection();
 		Statement statement = connect.createStatement();
 		
+		StringBuilder sb = new StringBuilder("create database " + databaseName);
+		// 字符集不为空
+		if(code != null && code.length() != 0) {
+			sb.append(" default charset " + code);
+		}
+		// 排序规则不为空
+		if(sort != null && sort.length() != 0) {
+			sb.append(" collate " + sort);
+		}
+		// 拼装好的SQL语句
+		String SQL = sb.toString();
+		System.out.println("SQL = " + SQL);
 		boolean taf = false;
 		try {
-		   statement.execute("create database " + databaseName + " default charset " + code + " collate " + sort);
+		   statement.execute(SQL);
 		   taf = true;
 		}catch(Exception e) {
 		   e.printStackTrace();

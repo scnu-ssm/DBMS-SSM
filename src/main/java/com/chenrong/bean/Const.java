@@ -74,10 +74,10 @@ public class Const {
 	public static final Integer expireTime = 30 * 60;
 	
 	// 邮件服务常量
-	public static final String SUBJECT = "密码找回 - 验证码";
+	public static final String SUBJECT = "密码更改 - 验证码";
 	
 	// 分页
-	public static final Integer SPAN = 100;   // 每一页的记录数
+	public static final Integer SPAN = 10;   // 每一页的记录数
 	
 	public static final Integer pageNum = 7;   // 页码列表最多显示7个元素，不允许设置双数
 

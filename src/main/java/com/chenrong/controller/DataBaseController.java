@@ -27,6 +27,11 @@ public class DataBaseController {
 	public ScnuResult createDateBase(String connectId, String databaseName, String characterSetDatabase, String collationDatabase) {
 		
 		System.out.println("创建数据库");
+		
+		if(connectId == null || databaseName == null) {
+		       return ScnuResult.forbidden("请求参数缺失");	
+		}
+		
 		try {
 		   ArrayList<String> databaseList = dataBaseService.showDateBase(connectId);
 		   for(String str : databaseList) {
@@ -49,7 +54,7 @@ public class DataBaseController {
 		if(taf) {
 			return ScnuResult.build(databaseName);
 		}else {
-			return ScnuResult.build("创建数据库: " + databaseName + " 失败");
+			return ScnuResult.forbidden("创建数据库: " + databaseName + " 失败");
 		}
 	}
 	

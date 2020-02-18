@@ -16,6 +16,8 @@ public class RecordSet {
 	
 	private List<String> columnsName;  // 列名字
 	
+	private Map<String, String> types;  // 列字段类型 
+	
 	private List<Map<String, Object>> records;  // 记录集
 
 	public Page getPage() {
@@ -50,10 +52,18 @@ public class RecordSet {
 		this.records = records;
 	}
 
+	public Map<String, String> getTypes() {
+		return types;
+	}
+
+	public void setTypes(Map<String, String> types) {
+		this.types = types;
+	}
+
 	@Override
 	public String toString() {
-		return "RecordSet [page=" + page + ", primaryKeys=" + primaryKeys + ", columnsName=" + columnsName
-				+ ", records=" + records + "]";
+		return "RecordSet [page=" + page + ", primaryKeys=" + primaryKeys + ", columnsName=" + columnsName + ", types="
+				+ types + ", records=" + records + "]";
 	}
 	
 }

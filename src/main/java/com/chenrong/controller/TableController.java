@@ -118,6 +118,8 @@ public class TableController {
 		   RecordSet recordSet = new RecordSet();
 		   // 查询数据表的字段
 		   List<String> columnsName = tableInfoService.showColumns(tableVO.getConnectId(), tableVO.getDatabase(), tableVO.getTable());
+		   // 查询数据表的字段类型
+		   Map<String, String> types = getFiledsType(tableVO.getConnectId(), tableVO.getDatabase(), tableVO.getTable());
 		   // 查询数据表的主键
 		   List<String> primaryKeys = tableInfoService.selectpk(tableVO.getConnectId(), tableVO.getDatabase(), tableVO.getTable());
 		   // 查询数据表的记录集合
@@ -171,6 +173,7 @@ public class TableController {
 		   //组装recordSet
 		   recordSet.setPage(page);
 		   recordSet.setColumnsName(columnsName);
+		   recordSet.setTypes(types);
 		   recordSet.setPrimaryKeys(primaryKeys);
 		   recordSet.setRecords(records);
 		   return ScnuResult.build(recordSet);
@@ -198,6 +201,8 @@ public class TableController {
 			RecordSet recordSet = new RecordSet();
 			// 查询数据表的字段
 			List<String> columnsName = tableInfoService.showColumns(connectId, database, table);
+			// 查询数据表的字段类型
+			Map<String, String> types = getFiledsType(connectId, database, table);
 			// 查询数据表的主键
 			List<String> primaryKeys = tableInfoService.selectpk(connectId, database, table);
 			// 按照字段查询记录集
@@ -253,6 +258,7 @@ public class TableController {
 			// 组装recordSet
 			recordSet.setPage(page);
 			recordSet.setColumnsName(columnsName);
+			recordSet.setTypes(types);
 			recordSet.setPrimaryKeys(primaryKeys);
 			recordSet.setRecords(records);
 			return ScnuResult.build(recordSet);
@@ -291,6 +297,32 @@ public class TableController {
 		          tableVO.setOldRecords(oldRecords);
 		    }
 		    
+	}
+	
+	// 得到字段的类型Map
+	public Map<String, String> getFiledsType(String connectId, String database, String table){
+		
+		      Map<String, String> types = new HashMap();
+		      try {
+		    	  List<Map<String, Object>> lists = tableInfoService.showTableMsg(connectId, database, table);
+		    	  if(lists != null) {
+		    		   for(Map<String, Object> map : lists) {
+		    			    String key = (String)map.get("Field");
+		    			    String value = (String)map.get("Type");
+		    			    if(value.equalsIgnoreCase("timestamp")) {
+		    			    	value = "yyyy-MM-dd HH:mm:ss";
+		    			    }
+		    			    // 组装字段类型Map
+		    			    types.put(key, value);
+		    		   }
+		    	  }
+		      
+		      } catch(Exception e) {
+		    	  System.out.println("查询表结构异常");
+		    	  e.printStackTrace();
+		      }
+		
+		      return types;
 	}
 
 }
